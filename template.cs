@@ -6,10 +6,12 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
-namespace Template
+namespace template
 {
 	public class OpenTKApp : GameWindow
 	{
+        public static int APP_WIDTH = 1280;
+        public static int APP_HEIGHT = 720;
 		static int screenID;
 		static Game game;
 		static bool terminated = false;
@@ -20,7 +22,7 @@ namespace Template
 			GL.Enable( EnableCap.Texture2D );
 			GL.Disable( EnableCap.DepthTest );
 			GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
-			ClientSize = new Size( 640, 400 );
+            ClientSize = new Size(APP_WIDTH, APP_HEIGHT );
 			game = new Game();
 			game.screen = new Surface( Width, Height );
 			Sprite.target = game.screen;
@@ -84,6 +86,6 @@ namespace Template
 		{ 
 			// entry point
 			using (OpenTKApp app = new OpenTKApp()) { app.Run( 30.0, 0.0 ); }
-		}
+        }
 	}
 }
