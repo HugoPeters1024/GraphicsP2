@@ -20,5 +20,10 @@ namespace template
         {
             this.radius = radius;
         }
+
+        public override void DrawDebug(Surface debugScreen)
+        {
+            base.DrawDebug(debugScreen);
+        }
     }
 }

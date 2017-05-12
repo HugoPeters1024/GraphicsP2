@@ -26,5 +26,13 @@ namespace template
         {
             lights.Add(l);
         }
+
+        public void DrawDebug(Surface debugScreen)
+        {
+            foreach (Primitive p in primitives)
+            {
+                p.DrawDebug(debugScreen);
+            }
+        }
     }
 }

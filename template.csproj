@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="FunctionWrapper.cs" />
     <Compile Include="game.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="Light.cs" />

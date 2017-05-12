@@ -7,10 +7,10 @@ using OpenTK;
 
 namespace template
 {
-    class Primitive
+    abstract class Primitive
     {
-        Vector3 position;
-        Vector3 color;
+        protected Vector3 position;
+        protected Vector3 color;
 
         /// <summary>
         /// Constructor class for primitives
@@ -31,6 +31,11 @@ namespace template
         {
             this.position = position;
             this.color = color;
+        }
+
+        public virtual void DrawDebug(Surface debugScreen)
+        {
+
         }
     }
 }

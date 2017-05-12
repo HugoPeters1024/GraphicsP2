@@ -5,10 +5,12 @@ namespace template
 {
     class Game
     {
-        static int VIEW_WIDTH = 640;
-        static int VIEW_HEIGHT = 480;
-        static int DEBUG_WIDTH = 200;
-        static int DEBUG_HEIGHT = 200;
+        public static int VIEW_WIDTH = 640;
+        public static int VIEW_HEIGHT = 480;
+        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH - VIEW_WIDTH;
+        public static int DEBUG_HEIGHT = OpenTKApp.APP_HEIGHT / 2;
+        public static float SCENE_WIDTH = 2f;
+        public static float SCENE_HEIGHT = SCENE_WIDTH;
 
         // member variables
         public Surface screen;
