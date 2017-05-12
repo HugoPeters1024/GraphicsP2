@@ -16,7 +16,7 @@ namespace template
         {
             camera = new Camera(new Vector3(0), new Vector3(0, 0, 1f));
             scene = new Scene();
-            scene.AddPrimitive(new Sphere(new Vector3(0), 1f));
+            scene.AddPrimitive(new Sphere(new Vector3(0), 1f, new Vector3(0)));
         }
 
         public void DrawRayTracer(Surface viewScreen)
@@ -28,6 +28,7 @@ namespace template
         {
             debugScreen.Print("Debug", 0, 0, 0x000000);
             scene.DrawDebug(debugScreen);
+            camera.DrawDebug(debugScreen);
         }
     }
 }
