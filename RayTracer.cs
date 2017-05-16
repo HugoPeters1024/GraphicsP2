@@ -14,9 +14,9 @@ namespace template
 
         public RayTracer()
         {
-            camera = new Camera(new Vector3(0), new Vector3(0, 0, 1f));
+            camera = new Camera(new Vector3(0, -2, 0), new Vector3(0, 1f, 0));
             scene = new Scene();
-            scene.AddPrimitive(new Sphere(new Vector3(0), 1f, new Vector3(0)));
+            scene.AddPrimitive(new Sphere(new Vector3(0, 2f, 0), 1f, new Vector3(0)));
         }
 
         public void DrawRayTracer(Surface viewScreen)
