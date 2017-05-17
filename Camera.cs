@@ -18,24 +18,43 @@ namespace template
         {
             width = 1f;
             height = 1f;
-            distance = 1f;
+            distance = 0.1f;
             this.position = position;
             this.direction = direction;
         }
 
         public void DrawDebug(Surface screen)
         {
-            DrawCircle(screen, position.X, position.Y, 0.1f, Vector3.Zero);
-            screen.Box(TX(center.X - width/2, screen), TY(center.Y - 0.01f, screen), TX(center.X + width/2, screen), TY(center.Y + 0.01f, screen) + 5, 0x000000);
-            for(int i=0; i<=10; ++i)
-            {
-                screen.Line(TX(position.X, screen), TY(position.Y, screen), TX(center.X - width/2 + (i/10f) * width, screen), TY(center.Y, screen),  0xff0000);
-            }
+            distance += 0.02f;
+            DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.Zero);
+            screen.Box(TX(TopLeft.X, screen), TY(TopLeft.Z - 0.02f, screen), TX(TopRight.X, screen), TY(TopRight.Z + 0.02f, screen), 0x000000);
         }
 
-        Vector3 center
+        #region Properties
+        public Vector3 Center
         {
             get { return position + distance * direction; }
         }
+
+        public Vector3 TopLeft
+        {
+            get { return Center + new Vector3(-width/2, height/2, 0); }
+        }
+
+        public Vector3 TopRight
+        {
+            get { return Center + new Vector3(width / 2, height / 2, 0); }
+        }
+
+        public Vector3 BottomLeft
+        {
+            get { return Center + new Vector3(-width / 2, -height / 2, 0); }
+        }
+
+        public Vector3 Position
+        {
+            get { return position; }
+        }
+        #endregion
     }
 }

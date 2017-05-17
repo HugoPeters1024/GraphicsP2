@@ -75,6 +75,7 @@
     <Compile Include="Primitives\Plane.cs" />
     <Compile Include="Primitives\Primitive.cs" />
     <Compile Include="Primitives\Sphere.cs" />
+    <Compile Include="Ray.cs" />
     <Compile Include="RayTracer.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="surface.cs" />

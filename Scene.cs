@@ -34,5 +34,12 @@ namespace template
                 p.DrawDebug(debugScreen);
             }
         }
+
+        #region Properties
+        public List<Primitive> Primitives
+        {
+            get { return primitives; }
+        }
+        #endregion
     }
 }

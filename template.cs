@@ -10,8 +10,8 @@ namespace template
 {
 	public class OpenTKApp : GameWindow
 	{
-        public static int APP_WIDTH = 1280;
-        public static int APP_HEIGHT = 720;
+        public static int APP_WIDTH = 1024;
+        public static int APP_HEIGHT = 512;
 		static int screenID;
 		static Game game;
 		static bool terminated = false;

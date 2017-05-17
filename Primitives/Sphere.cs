@@ -25,8 +25,21 @@ namespace template
         public override void DrawDebug(Surface debugScreen)
         {
             debugScreen.Print("Ello", 20, 40, 0x000000);
-            DrawCircle(debugScreen, position.X, position.Y, radius, color);
+            DrawCircle(debugScreen, position.X, position.Z, radius * 2, color);
             base.DrawDebug(debugScreen);
+        }
+
+        public override void Intersect(Ray ray)
+        {
+            Vector3 c = position - ray.Origin;
+            float t = Vector3.Dot(c, ray.Direction);
+            Vector3 q = c - t * ray.Direction;
+            float p2 = Vector3.Dot(q, q);
+            if (p2 > radius * radius)
+                return;
+
+            t -= (float)Math.Sqrt(radius * radius - p2);
+            ray.Dist = Math.Min(ray.Dist, Math.Max(0, t));
         }
     }
 }

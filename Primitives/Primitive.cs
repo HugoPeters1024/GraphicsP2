@@ -37,5 +37,10 @@ namespace template
         {
 
         }
+
+        public virtual void Intersect(Ray ray)
+        {
+
+        }
     }
 }

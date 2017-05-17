@@ -5,10 +5,10 @@ namespace template
 {
     class Game
     {
-        public static int VIEW_WIDTH = 640;
-        public static int VIEW_HEIGHT = 480;
-        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH - VIEW_WIDTH;
-        public static int DEBUG_HEIGHT = OpenTKApp.APP_HEIGHT / 2;
+        public static int VIEW_WIDTH = 512;
+        public static int VIEW_HEIGHT = 512;
+        public static int DEBUG_WIDTH = 512;
+        public static int DEBUG_HEIGHT = 512;
         public static float SCENE_WIDTH = 10f;
         public static float SCENE_HEIGHT = SCENE_WIDTH;
 
@@ -29,7 +29,7 @@ namespace template
         public void Tick()
         {
             screen.Clear(0);
-            debugScreen.Clear(0xffffff);
+            debugScreen.Clear(0);
             app.Draw(viewScreen, debugScreen);
 
             AddSurface(0, 0, viewScreen);
