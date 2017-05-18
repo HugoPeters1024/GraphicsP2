@@ -5,10 +5,10 @@ namespace template
 {
     class Game
     {
-        public static int VIEW_WIDTH = 512;
-        public static int VIEW_HEIGHT = 512;
-        public static int DEBUG_WIDTH = 512;
-        public static int DEBUG_HEIGHT = 512;
+        public static int VIEW_WIDTH = OpenTKApp.APP_WIDTH/2;
+        public static int VIEW_HEIGHT = OpenTKApp.APP_HEIGHT;
+        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH/2;
+        public static int DEBUG_HEIGHT = OpenTKApp.APP_HEIGHT;
         public static float SCENE_WIDTH = 10f;
         public static float SCENE_HEIGHT = SCENE_WIDTH;
 
@@ -36,6 +36,7 @@ namespace template
             AddSurface(screen.width - debugScreen.width, 0, debugScreen);
         }
 
+        //Company surfaces by an offset and perform a memcopy
         public void AddSurface(int xs, int ys, Surface s)
         {
             for (int x = 0; x < s.width; ++x)

@@ -49,7 +49,7 @@ namespace template
         {
             int x0 = TX(xin, s);
             int y0 = TY(yin, s);
-            int radius = (int)(rin * (s.width / Game.SCENE_WIDTH) * 0.5f);
+            int radius = (int)(rin * (s.width / Game.SCENE_WIDTH));
             int x = radius;
             int y = 0;
             int err = 0;
@@ -89,6 +89,11 @@ namespace template
             if (v < min) { return min; }
             if (v > max) { return max; }
             return v;
+        }
+
+        public static int CreateColor(Vector3 c)
+        {
+            return (int)(c.X * 255) << 16 ^ (int)(c.Y * 255) << 8 ^ (int)(c.Z * 255);
         }
     }
 }

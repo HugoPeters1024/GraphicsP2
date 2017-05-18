@@ -11,7 +11,6 @@ namespace template
     class Sphere : Primitive
     {
         float radius;
-
         public Sphere(Vector3 position, float radius) : base(position)
         {
             this.radius = radius;
@@ -25,7 +24,7 @@ namespace template
         public override void DrawDebug(Surface debugScreen)
         {
             debugScreen.Print("Ello", 20, 40, 0x000000);
-            DrawCircle(debugScreen, position.X, position.Z, radius * 2, color);
+            DrawCircle(debugScreen, position.X, position.Z, radius, color);
             base.DrawDebug(debugScreen);
         }
 
@@ -39,7 +38,11 @@ namespace template
                 return;
 
             t -= (float)Math.Sqrt(radius * radius - p2);
-            ray.Dist = Math.Min(ray.Dist, Math.Max(0, t));
+            if (t < ray.Intsect.Distance && t > 0)
+            {
+                Vector3 point = ray.Origin + t * ray.Direction; //Point of contact on the circle
+                ray.Intsect = new Intersection(this, t, position - point);
+            }
         }
     }
 }

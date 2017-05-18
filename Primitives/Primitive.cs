@@ -11,6 +11,7 @@ namespace template
     {
         protected Vector3 position;
         protected Vector3 color;
+        protected float reflect;
 
         /// <summary>
         /// Constructor class for primitives
@@ -29,6 +30,7 @@ namespace template
         /// <param name="color">The color for this primitive</param>
         public Primitive(Vector3 position, Vector3 color)
         {
+            reflect = 0f;
             this.position = position;
             this.color = color;
         }
@@ -42,5 +44,17 @@ namespace template
         {
 
         }
+
+        #region Properties
+        public Vector3 Color
+        {
+            get { return color; }
+        }
+
+        public float Reflect
+        {
+            get { return reflect; }
+        }
+        #endregion
     }
 }

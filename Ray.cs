@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
+using static template.FunctionWrapper;
 
 namespace template
 {
@@ -11,13 +12,29 @@ namespace template
     {
         Vector3 direction;
         Vector3 origin;
-        float dist;
+        Intersection intsect;
 
         public Ray(Vector3 direction, Vector3 origin)
         {
-            dist = 10f;
+            intsect = new Intersection(null, 10f, Vector3.Zero);
             this.direction = Vector3.Normalize(direction);
             this.origin = origin;
+        }
+
+        public Vector3 GetColor(Scene s)
+        {
+            foreach (Primitive p in s.Primitives)
+            {
+                p.Intersect(this);
+            }
+            if (intsect.Primitive != null)
+            {
+                if (intsect.Primitive.Reflect == 0)
+                    return intsect.Primitive.Color * Clamp(Vector3.Dot(direction, intsect.Normal));
+                else
+                    return intsect.Primitive.Color * (1f - intsect.Primitive.Reflect); //TODO: +new reflected ray
+            }
+            return Vector3.Zero;
         }
 
 
@@ -32,10 +49,10 @@ namespace template
             get { return direction; }
         }
 
-        public float Dist
+        public Intersection Intsect
         {
-            get { return dist; }
-            set { dist = value; }
+            get { return intsect; }
+            set { intsect = value; }
         }
         #endregion
     }

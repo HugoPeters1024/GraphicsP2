@@ -18,16 +18,15 @@ namespace template
         {
             width = 1f;
             height = 1f;
-            distance = 0.1f;
+            distance = 0.6f;
             this.position = position;
             this.direction = direction;
         }
 
         public void DrawDebug(Surface screen)
         {
-            distance += 0.02f;
-            DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.Zero);
-            screen.Box(TX(TopLeft.X, screen), TY(TopLeft.Z - 0.02f, screen), TX(TopRight.X, screen), TY(TopRight.Z + 0.02f, screen), 0x000000);
+            DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.One);
+            screen.Box(TX(TopLeft.X, screen), TY(TopLeft.Z - 0.02f, screen), TX(TopRight.X, screen), TY(TopRight.Z + 0.02f, screen), 0xffffff);
         }
 
         #region Properties
