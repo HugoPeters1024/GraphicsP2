@@ -41,7 +41,7 @@ namespace template
             if (t < ray.Intsect.Distance && t > 0)
             {
                 Vector3 point = ray.Origin + t * ray.Direction; //Point of contact on the circle
-                ray.Intsect = new Intersection(this, t, position - point);
+                ray.Intsect = new Intersection(this, t, (point-position));
             }
         }
     }

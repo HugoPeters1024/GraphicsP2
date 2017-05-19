@@ -9,8 +9,8 @@ namespace template
 {
     class Plane : Primitive
     {
-        Vector3 normal;
-        float d;
+        protected Vector3 normal;
+        protected float d;
 
         public Plane(Vector3 normal, float d) : base(normal)
         {

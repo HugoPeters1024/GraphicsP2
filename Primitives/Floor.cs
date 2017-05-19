@@ -16,7 +16,15 @@ namespace template
 
         public override void Intersect(Ray ray)
         {
-            base.Intersect(ray);
+            float t = -(Vector3.Dot(ray.Origin, normal) + d) / (Vector3.Dot(ray.Direction, normal));
+            Vector3 coord = ray.Origin + t * ray.Direction;
+            color = Vector3.Zero;
+            if ((Math.Floor(coord.X * 2) + Math.Floor(coord.Z * 2)) % 2 == 0)
+                color = Vector3.One;
+
+
+            if (t > 0 && t < ray.Intsect.Distance)
+                ray.Intsect = new Intersection(this, t, normal);
         }
     }
 }

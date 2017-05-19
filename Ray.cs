@@ -16,7 +16,7 @@ namespace template
 
         public Ray(Vector3 direction, Vector3 origin)
         {
-            intsect = new Intersection(null, 10f, Vector3.Zero);
+            intsect = new Intersection(null, 10000, Vector3.Zero);
             this.direction = Vector3.Normalize(direction);
             this.origin = origin;
         }
@@ -30,7 +30,7 @@ namespace template
             if (intsect.Primitive != null)
             {
                 if (intsect.Primitive.Reflect == 0)
-                    return intsect.Primitive.Color * Clamp(Vector3.Dot(direction, intsect.Normal));
+                    return intsect.Primitive.Color;// * Clamp(Vector3.Dot(direction, intsect.Normal));
                 else
                     return intsect.Primitive.Color * (1f - intsect.Primitive.Reflect); //TODO: +new reflected ray
             }
