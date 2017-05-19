@@ -24,10 +24,12 @@ namespace template
             viewScreen = new Surface(VIEW_WIDTH, VIEW_HEIGHT);
             debugScreen = new Surface(DEBUG_WIDTH, DEBUG_HEIGHT);
             app = new Application();
+            KeyboardHandler.Init();
         }
 
         public void Tick()
-        {
+        { 
+            KeyboardHandler.Update();
             screen.Clear(0);
             debugScreen.Clear(0);
             app.Draw(viewScreen, debugScreen);

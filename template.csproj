@@ -71,6 +71,7 @@
     <Compile Include="FunctionWrapper.cs" />
     <Compile Include="game.cs" />
     <Compile Include="Intersection.cs" />
+    <Compile Include="KeyboardHandler.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Primitives\Floor.cs" />
     <Compile Include="Primitives\Plane.cs" />
