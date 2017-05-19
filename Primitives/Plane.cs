@@ -16,12 +16,14 @@ namespace template
         {
             this.normal = normal;
             this.d = d;
+            this.PrimitiveName = "Plane";
         }
 
         public Plane(Vector3 normal, float d, Vector3 color) : base(normal, color)
         {
             this.normal = normal;
             this.d = d;
+            this.PrimitiveName = "Plane";
         }
 
         public override void Intersect(Ray ray)

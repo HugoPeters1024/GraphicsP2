@@ -11,7 +11,7 @@ namespace template
     {
         public Floor(Vector3 normal, float d) : base(normal, d)
         {
-
+            this.PrimitiveName = "Floor";
         }
 
         public override void Intersect(Ray ray)
@@ -21,8 +21,7 @@ namespace template
             color = Vector3.Zero;
             if ((Math.Floor(coord.X * 2) + Math.Floor(coord.Z * 2)) % 2 == 0)
                 color = Vector3.One;
-
-
+            
             if (t > 0 && t < ray.Intsect.Distance)
                 ray.Intsect = new Intersection(this, t, normal);
         }

@@ -14,11 +14,13 @@ namespace template
         public Sphere(Vector3 position, float radius) : base(position)
         {
             this.radius = radius;
+            this.PrimitiveName = "Sphere";
         }
 
         public Sphere(Vector3 position, float radius, Vector3 color) : base(position, color)
         {
             this.radius = radius;
+            this.PrimitiveName = "Sphere";
         }
 
         public override void DrawDebug(Surface debugScreen)
@@ -41,7 +43,7 @@ namespace template
             if (t < ray.Intsect.Distance && t > 0)
             {
                 Vector3 point = ray.Origin + t * ray.Direction; //Point of contact on the circle
-                ray.Intsect = new Intersection(this, t, (point-position));
+                ray.Intsect = new Intersection(this, t, -(point-position));
             }
         }
     }

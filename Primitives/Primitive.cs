@@ -12,6 +12,7 @@ namespace template
         protected Vector3 position;
         protected Vector3 color;
         protected float reflect;
+        protected string primitiveName;
 
         /// <summary>
         /// Constructor class for primitives
@@ -54,6 +55,17 @@ namespace template
         public float Reflect
         {
             get { return reflect; }
+        }
+
+        public Vector3 Position
+        {
+            get { return position; }
+        }
+
+        public string PrimitiveName
+        {
+            get { return primitiveName; }
+            set { primitiveName = value; }
         }
         #endregion
     }
