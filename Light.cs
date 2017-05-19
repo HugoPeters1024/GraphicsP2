@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
+using static template.FunctionWrapper;
 
 namespace template
 {
@@ -23,5 +24,25 @@ namespace template
             this.position = position;
             this.intensity = intensity;
         }
+
+        public void DrawDebug(Surface screen)
+        {
+            DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.One);
+        }
+
+
+        #region Properties
+        public Vector3 Intensity
+        {
+            get { return intensity; }
+            set { intensity = value; }
+        }
+
+        public Vector3 Origin
+        {
+            get { return position; }
+            set { position = value; }
+        }
+        #endregion
     }
 }

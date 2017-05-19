@@ -9,16 +9,7 @@ namespace template
 {
     static class FunctionWrapper
     {
-        /*
-        public static int TX(float x, int sWidth)
-        {
-            return (int)(x + Game.SCENE_WIDTH/2) * sWidth;
-        }
-
-        public static int TY(float y, int sHeight)
-        {
-            return (int)(y + Game.SCENE_HEIGHT/2) * sHeight;
-        } */
+        public static float EPS { get { return 0.001f; } }
 
         /// <summary>
         /// converts values of x from -range/2 ... range/2 to 0 ...640
@@ -88,6 +79,14 @@ namespace template
         {
             if (v < min) { return min; }
             if (v > max) { return max; }
+            return v;
+        }
+
+        public static Vector3 Clamp(Vector3 v, float min = 0f, float max = 1f)
+        {
+            v.X = Clamp(v.X, min, max);
+            v.Y = Clamp(v.Y, min, max);
+            v.Z = Clamp(v.Z, min, max);
             return v;
         }
 

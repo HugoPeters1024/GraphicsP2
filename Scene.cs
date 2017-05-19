@@ -33,12 +33,23 @@ namespace template
             {
                 p.DrawDebug(debugScreen);
             }
+
+            foreach (Light l in lights)
+            {
+                l.DrawDebug(debugScreen);
+                Console.WriteLine("Drawing a light!");
+            }
         }
 
         #region Properties
         public List<Primitive> Primitives
         {
             get { return primitives; }
+        }
+
+        public List<Light> Lights
+        {
+            get { return lights; }
         }
         #endregion
     }

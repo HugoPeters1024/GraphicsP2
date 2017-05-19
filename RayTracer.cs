@@ -19,7 +19,11 @@ namespace template
             scene = new Scene();
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)));
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
-            scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1));
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), 1));
+
+            scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
+            scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
+            scene.AddLight(new Light(new Vector3(0, 2, -0.2f)) { Intensity = Vector3.One * 16 });
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -58,7 +62,7 @@ namespace template
                     //   p.Intersect(ray);  //Calculate the intersection with all the primitives
 
                     byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
-                    screen.pixels[x + screen.width * y] = CreateColor(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, ray.Intsect.Normal))); // i << 16 ^ i << 8 ^ i;
+                    screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     //Draw some rays on the debug screen
                     if (y == (debugScreen.height/2) && x % 30 == 0)
                     {
@@ -75,8 +79,6 @@ namespace template
                             TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
                             TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
                             0x00ff00);
-
-                        Console.WriteLine("Normal: " + ray.Intsect.Normal + "  --  Direction: "+ray.Direction);
                     }
                 }
         }
