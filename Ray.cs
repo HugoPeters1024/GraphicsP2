@@ -38,9 +38,23 @@ namespace template
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
-                        (new Ray(ReflectedRay, origin + direction * intsect.Distance).GetColor(s, depth+1));
+                        (new Ray(ReflectedRay, origin + direction * intsect.Distance).GetColor(s, depth + 1));
             }
             return Vector3.Zero;
+        }
+
+        public Vector3 GetStaticColor(Scene s, int depth = 0)
+        {
+            if (depth > MAX_DEPTH)
+                return Vector3.Zero;
+            foreach (Primitive p in s.Primitives)
+            {
+                p.Intersect(this);
+            }
+            if (intsect.Primitive != null)
+                return intsect.Primitive.Color;
+            else
+                return Vector3.Zero;
         }
 
         Vector3 DirectIllumination(Vector3 I, Vector3 N, Scene s) //Intersection Point, Normal

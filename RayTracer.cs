@@ -11,7 +11,7 @@ namespace template
     class RayTracer
     {
         static Scene scene;
-        Camera camera;
+        static Camera camera;
 
         public RayTracer()
         {
@@ -19,13 +19,14 @@ namespace template
             scene = new Scene();
 
 
-            scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
-            scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
-            scene.AddLight(new Light(new Vector3(0, 2, -0.2f)) { Intensity = Vector3.One * 16 });
+            //scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
+            scene.AddLight(new Light(new Vector3(1f, 1.2f, -1.5f)) { Intensity = Vector3.One * 3 });
+            //scene.AddLight(new Light(new Vector3(0, 2, -0.2f)) { Intensity = Vector3.One * 16 });
+            scene.AddLight(new Light(new Vector3(-1.5f, 2.5f, 0)) { Intensity = Vector3.One });
 
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere"});
-            scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
-            scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1) { PrimitiveName = "Floor"});
+            scene.AddPrimitive(new Sphere(new Vector3(-1.2f, 2, 1), 0.5f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1) { PrimitiveName = "Floor"});
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -53,35 +54,80 @@ namespace template
             float horzStep = 1f / screen.width;
             float vertStep = 1f / screen.height;
             float u = 0, v = 0;
-            for (int y = 0; y < screen.height; ++y, u = 0, v+= vertStep)
-                for(int x=0; x<screen.width; ++x, u += horzStep)
-                {
-                    screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
-                    Vector3 dir = screenPoint - camera.Position;  //A vector from the camera to that screen point
-                    ray = new Ray(dir, camera.Position);  //Create a primary ray from there (dir is normalized in the constructer)
-
-                    //foreach (Primitive p in scene.Primitives)
-                    //   p.Intersect(ray);  //Calculate the intersection with all the primitives
-
-                    byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
-                    screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
-                    //Draw some rays on the debug screen
-                    if (y == (debugScreen.height/2) && x % 30 == 0)
+            if (!camera.IsMoving)
+            {
+                for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep)
+                    for (int x = 0; x < screen.width; ++x, u += horzStep)
                     {
-                        debugScreen.Line(
-                            TX(camera.Position.X, debugScreen),
-                            TY(camera.Position.Z, debugScreen),
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
-                            0xff0000);
+                        screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
+                        Vector3 dir = screenPoint - camera.Position;  //A vector from the camera to that screen point
+                        ray = new Ray(dir, camera.Position);  //Create a primary ray from there (dir is normalized in the constructer)
 
-                        debugScreen.Line(
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
-                            0x00ff00);
+                        //foreach (Primitive p in scene.Primitives)
+                        //   p.Intersect(ray);  //Calculate the intersection with all the primitives
+
+                        byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
+                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+
+                        //Draw some rays on the debug screen
+                        if (y == (debugScreen.height / 2) && x % 30 == 0)
+                        {
+                            debugScreen.Line(
+                                TX(camera.Position.X, debugScreen),
+                                TY(camera.Position.Z, debugScreen),
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
+                                0xff0000);
+
+                            debugScreen.Line(
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
+                                0x00ff00);
+                        }
                     }
+            }
+            else
+            {
+                for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep)
+                    for (int x = 0; x < screen.width; ++x, u += horzStep)
+                    {
+                        screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
+                        Vector3 dir = screenPoint - camera.Position;  //A vector from the camera to that screen point
+                        ray = new Ray(dir, camera.Position);  //Create a primary ray from there (dir is normalized in the constructer)
+
+                        //foreach (Primitive p in scene.Primitives)
+                        //   p.Intersect(ray);  //Calculate the intersection with all the primitives
+
+                        byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
+                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+
+                        //Draw some rays on the debug screen
+                        if (y == (debugScreen.height / 2) && x % 30 == 0)
+                        {
+                            debugScreen.Line(
+                                TX(camera.Position.X, debugScreen),
+                                TY(camera.Position.Z, debugScreen),
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
+                                0xff0000);
+
+                            debugScreen.Line(
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
+                                TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
+                                TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
+                                0x00ff00);
+                        }
+                    }
+            
+                   
+
+
+
+
+                    
                 }
         }
 
@@ -89,6 +135,11 @@ namespace template
         public static Scene Scene
         {
             get { return scene; }
+        }
+
+        public static Camera Camera
+        {
+            get { return camera; }
         }
         #endregion
     }

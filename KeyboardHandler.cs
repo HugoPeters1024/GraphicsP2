@@ -32,5 +32,10 @@ namespace template
         {
             return curKeyboardState.IsKeyDown(k);
         }
+
+        public static bool IsAnyKeyDown()
+        {
+            return curKeyboardState.IsAnyKeyDown;
+        }
     }
 }
