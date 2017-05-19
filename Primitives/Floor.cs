@@ -5,13 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 
-namespace template.Primitives
+namespace template
 {
-    class Floor : Primitive
+    class Floor : Plane
     {
-        public Floor(Vector3 position) : base(position)
+        public Floor(Vector3 normal, float d) : base(normal, d)
         {
 
+        }
+
+        public override void Intersect(Ray ray)
+        {
+            base.Intersect(ray);
         }
     }
 }

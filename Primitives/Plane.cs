@@ -10,15 +10,26 @@ namespace template
     class Plane : Primitive
     {
         Vector3 normal;
+        float d;
 
-        public Plane(Vector3 position, Vector3 normal) : base(position)
+        public Plane(Vector3 normal, float d) : base(normal)
         {
             this.normal = normal;
+            this.d = d;
         }
 
-        public Plane(Vector3 position, Vector3 color, Vector3 normal) : base(position, color)
+        public Plane(Vector3 normal, float d, Vector3 color) : base(normal, color)
         {
             this.normal = normal;
+            this.d = d;
+        }
+
+        public override void Intersect(Ray ray)
+        {
+            float t = -(Vector3.Dot(ray.Origin, normal) + d) / (Vector3.Dot(ray.Direction, normal));
+
+            if (t > 0 && t < ray.Intsect.Distance)
+                ray.Intsect = new Intersection(this, t, normal);
         }
     }
 }

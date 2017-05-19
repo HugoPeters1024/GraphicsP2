@@ -19,7 +19,7 @@ namespace template
             scene = new Scene();
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)));
             scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
-            scene.AddPrimitive(new Floor(new Vector3(0, -1, 0)));
+            scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -1));
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
