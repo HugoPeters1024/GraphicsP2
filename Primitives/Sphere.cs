@@ -14,11 +14,13 @@ namespace template
         public Sphere(Vector3 position, float radius) : base(position)
         {
             this.radius = radius;
+            this.PrimitiveName = "Sphere";
         }
 
         public Sphere(Vector3 position, float radius, Vector3 color) : base(position, color)
         {
             this.radius = radius;
+            this.PrimitiveName = "Sphere";
         }
 
         public override void DrawDebug(Surface debugScreen)

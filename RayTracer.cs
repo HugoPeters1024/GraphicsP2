@@ -10,20 +10,22 @@ namespace template
 {
     class RayTracer
     {
-        Scene scene;
+        static Scene scene;
         Camera camera;
 
         public RayTracer()
         {
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)));
-            //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), 1));
 
             scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, 2, -0.2f)) { Intensity = Vector3.One * 16 });
+
+            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere"});
+            scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
+            scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1) { PrimitiveName = "Floor"});
+
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -82,5 +84,12 @@ namespace template
                     }
                 }
         }
+
+        #region Properties
+        public static Scene Scene
+        {
+            get { return scene; }
+        }
+        #endregion
     }
 }

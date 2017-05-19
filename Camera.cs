@@ -15,12 +15,16 @@ namespace template
         Vector3 position;
         Vector3 direction;
         float distance, width, height;
+        double FOVd, FOVr,FOVcalc;
 
         public Camera(Vector3 position, Vector3 direction)
         {
             width = 1f;
             height = 1f;
-            distance = 0.6f;
+            FOVcalc = Math.PI / 180;
+            FOVd = 90;
+            FOVr = FOVd * FOVcalc;
+            distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
             this.position = position;
             this.direction = Vector3.Normalize(direction);
         }
@@ -34,28 +38,143 @@ namespace template
 
         public void Update()
         {
+            //Rotation control
+            #region Rotation
+            //rotate left
             if (KeyDown(Key.Left))
             {
-                //rotate left
                 Vector3 v = Center;
-                v -= 0.1f * Vector3.Normalize(TopRight - TopLeft);
+                v -= 0.01f * Vector3.Normalize(TopRight - TopLeft);
                 direction = Vector3.Normalize(v - position);
             }
+
+            //rotate right
             if (KeyDown(Key.Right))
             {
-                //rotate right
                 Vector3 v = Center;
-                v += 0.1f * Vector3.Normalize(TopRight - TopLeft);
+                v += 0.01f * Vector3.Normalize(TopRight - TopLeft);
                 direction = Vector3.Normalize(v - position);
             }
-            if (KeyDown(Key.Up))
+
+            //rotate up
+            if (KeyDown(Key.Up) && direction.Y < 0.9f)
             {
-                //rotate up
+                Vector3 v = Center;
+                v -= 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
+                direction = Vector3.Normalize(v - position);
             }
-            if (KeyDown(Key.Down))
+
+            //rotate down
+            if (KeyDown(Key.Down) && direction.Y > -0.9f)
             {
-                //rotate down
+                Vector3 v = Center;
+                v += 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
+                direction = Vector3.Normalize(v - position);
             }
+            #endregion
+
+            //Movement control
+            #region Movement
+            //move forwards
+            if (KeyDown(Key.W))
+            {
+                position.X += 0.05f * direction.X;
+                position.Z += 0.05f * direction.Z;
+            }
+
+            //move backwards
+            if (KeyDown(Key.S))
+            {
+                position.X -= 0.05f * direction.X;
+                position.Z -= 0.05f *direction.Z;
+            }
+
+            //move rightwards
+            if (KeyDown(Key.D))
+            {
+                position.X += 0.05f * direction.Z;
+                position.Z -= 0.05f * direction.X;
+            }
+
+            //move leftwards
+            if (KeyDown(Key.A))
+            {
+                position.X -= 0.05f * direction.Z;
+                position.Z += 0.05f * direction.X;
+            }
+
+            //move up
+            if (KeyDown(Key.LShift))
+            {
+                position.Y += 0.05f;
+            }
+
+            //move down
+            if (KeyDown(Key.LControl))
+            {
+                position.Y -= 0.05f;
+            }
+            #endregion
+
+            //Other controls
+            #region Others
+            if (KeyDown(Key.I))
+            {
+                //decrease FOV
+                FOVd -= 5;
+                FOVr = FOVd * FOVcalc;
+                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+            }
+
+            if (KeyDown(Key.K))
+            {
+                //increase FOV
+                FOVd += 5;
+                FOVr = FOVd * FOVcalc;
+                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+            }
+
+            if (KeyDown(Key.L))
+            {
+                Console.WriteLine("Type desired FOV in degrees:");
+                string s = Console.ReadLine();
+                FOVd = double.Parse(s);
+                FOVr = FOVd * FOVcalc;
+                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+            }
+
+            if(KeyDown(Key.T))
+            {
+                Console.WriteLine("Index : Primitives");
+                for(int j = 0; j < RayTracer.Scene.Primitives.Count; j++)
+                {
+                    Console.Write(j);
+                    Console.Write(" : ");
+                    Console.WriteLine(RayTracer.Scene.Primitives[j].PrimitiveName);
+                }
+                Console.WriteLine("Type desired target's index number:");
+                string s = Console.ReadLine();
+                try
+                {
+                    int i = int.Parse(s);
+                    if (i < 0 || i > RayTracer.Scene.Primitives.Count - 1)
+                    {
+                        Console.WriteLine("Error, input value not in range of list. Reset to default '0'");
+                        direction = Vector3.Normalize(RayTracer.Scene.Primitives[0].Position - position);
+                    }
+                    else
+                    {
+                        Console.Write("Succes, target set to: ");
+                        Console.WriteLine(RayTracer.Scene.Primitives[i].PrimitiveName);
+                        direction = Vector3.Normalize(RayTracer.Scene.Primitives[i].Position - position);
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Error: " + e.Message);
+                }
+            }
+            #endregion
         }
 
         #region Properties
@@ -66,17 +185,29 @@ namespace template
 
         public Vector3 TopLeft
         {
-            get { return Center  - width/2 * Vector3.Cross(Vector3.UnitY, direction) + Vector3.UnitY*height/2.0f; }
+            get
+            {
+                Vector3 v = Vector3.Cross(Vector3.UnitY, direction);
+                return Center - width / 2 * v - Vector3.Cross(v, direction) * height / 2.0f;
+            }
         }
 
         public Vector3 TopRight
         {
-            get { return Center + width / 2 * Vector3.Cross(Vector3.UnitY,direction ) + Vector3.UnitY * height / 2.0f; }
+            get
+            {
+                Vector3 v = Vector3.Cross(Vector3.UnitY, direction);
+                return Center + width / 2 * v - Vector3.Cross(v, direction) * height / 2.0f;
+            }
         }
 
         public Vector3 BottomLeft
         {
-            get { return Center - width / 2 * Vector3.Cross(Vector3.UnitY,direction ) - Vector3.UnitY * height / 2.0f; }
+            get
+            {
+                Vector3 v = Vector3.Cross(Vector3.UnitY, direction);
+                return Center - width / 2 * v + Vector3.Cross(v, direction) * height / 2.0f;
+            }
         }
 
         public Vector3 Position
