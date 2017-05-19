@@ -17,15 +17,7 @@ namespace template
         {
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
-<<<<<<< HEAD
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f, 1f, 1f)) { Reflectivity = 0f });
-            //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1.5f) { Reflectivity = 0.5f });
 
-            //scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One * 0.01f});
-           // scene.AddLight(new Light(new Vector3(0, -1f, 0f)) { Intensity = Vector3.One * 32 });
-            scene.AddLight(new Light(new Vector3(0, 0, -3), 60f));
-=======
 
             scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
@@ -34,8 +26,6 @@ namespace template
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere"});
             scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
             scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1) { PrimitiveName = "Floor"});
-
->>>>>>> bc9a740d88a85bab08b88ec8a27e76c335c561a1
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
