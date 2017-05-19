@@ -32,12 +32,14 @@ namespace template
         void DrawDebug(Surface debugScreen)
         {
             debugScreen.Print("Debug", 0, 0, 0x000000);
+            debugScreen.Line(0, 0, 0, debugScreen.height, 0xffff00);
             scene.DrawDebug(debugScreen);
             camera.DrawDebug(debugScreen);
         }
 
         void Draw(Surface screen, Surface debugScreen)
         {
+            camera.Update();
             Ray ray;
             Vector3 screenPoint;
             Vector3 screenHorz = camera.TopRight - camera.TopLeft; //Horizontal vector of the screen
