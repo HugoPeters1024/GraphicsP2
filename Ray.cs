@@ -63,13 +63,17 @@ namespace template
             foreach (Light light in s.Lights)
             {
                 Vector3 L = light.Origin - I;
-                float dist = (float)Math.Sqrt(Vector3.Dot(L, L));
-                L *= (1.0f / dist);
-                if (IsVisible(I, L, dist, s))
+                float NdotL = Vector3.Dot(N, L);
+                if (NdotL > 0)
                 {
-                    float attenuation = (1f / (dist * dist)) - EPS;
-                    if (attenuation > 0)
-                        color += Clamp(light.Intensity * Vector3.Dot(N, L) * attenuation);
+                    float dist = (float)Math.Sqrt(Vector3.Dot(L, L));
+                    L *= (1.0f / dist);
+                    if (IsVisible(I, L, dist, s))
+                    {
+                        float attenuation = (1f / (dist * dist)) - EPS;
+                        if (attenuation > 0)
+                            color += Clamp(light.Intensity * NdotL * attenuation);
+                    }
                 }
             }
             return color;

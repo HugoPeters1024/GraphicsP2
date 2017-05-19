@@ -50,6 +50,7 @@ namespace template
         public Vector3 Color
         {
             get { return color; }
+            set { color = value; }
         }
 
         public float Reflectivity

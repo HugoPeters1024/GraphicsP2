@@ -24,11 +24,13 @@ namespace template
             scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
-            scene.AddLight(new Light(new Vector3(0, 5, 0), new Vector3(1,1,0.4f)*200));
+            scene.AddLight(new Light(new Vector3(0, 5, 0), new Vector3(1,1,0.4f)*1000));
+            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20000));
 
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.8f});
+            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(0f)) { PrimitiveName = "White Sphere", Reflectivity = 0.4f});
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0f});
+            //scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), 6f) { PrimitiveName = "Roof" });
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -71,7 +73,7 @@ namespace template
                         screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     else
                     {
-                        if (random.Next(10) == 0)
+                        if (random.Next(25) == 0)
                             screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     }
 
