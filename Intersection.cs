@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
+using static template.FunctionWrapper;
 
 namespace template
 {
@@ -16,7 +17,7 @@ namespace template
         public Intersection(Primitive p, float d, Vector3 n)
         {
             primitive = p;
-            distance = d;
+            distance = d - 2 * EPS;
             normal = Vector3.Normalize(n);
         }
 

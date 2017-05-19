@@ -15,7 +15,8 @@ namespace template
         Vector3 position;
         Vector3 direction;
         float distance, width, height;
-        double FOVd, FOVr,FOVcalc;
+        double FOVd, FOVr, FOVcalc;
+        bool isMoving;
 
         public Camera(Vector3 position, Vector3 direction)
         {
@@ -38,6 +39,15 @@ namespace template
 
         public void Update()
         {
+            if (IsAnyKeyDown())
+            {
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
+
             //Rotation control
             #region Rotation
             //rotate left
@@ -138,9 +148,17 @@ namespace template
             {
                 Console.WriteLine("Type desired FOV in degrees:");
                 string s = Console.ReadLine();
-                FOVd = double.Parse(s);
-                FOVr = FOVd * FOVcalc;
-                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+                try
+                {
+                    FOVd = double.Parse(s);
+                    FOVr = FOVd * FOVcalc;
+                    distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+                    Console.WriteLine("FOV successfully set to: " + FOVd + " degrees");
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Error: " + e.Message);
+                }
             }
 
             if(KeyDown(Key.T))
@@ -213,6 +231,12 @@ namespace template
         public Vector3 Position
         {
             get { return position; }
+        }
+
+        public bool IsMoving
+        {
+            get { return isMoving; }
+            set { isMoving = value; }
         }
         #endregion
     }

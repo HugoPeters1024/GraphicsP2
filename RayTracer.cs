@@ -11,19 +11,22 @@ namespace template
     class RayTracer
     {
         static Scene scene;
-        Camera camera;
+        static Camera camera;
+        static Random random;
 
         public RayTracer()
         {
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
+            random = new Random();
 
 
             scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
-            scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = Vector3.One * 8 });
+            scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
+            scene.AddLight(new Light(new Vector3(0, 5, 0), new Vector3(1,1,0.4f)*200));
 
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere"});
+            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.8f});
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
             scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
         }
@@ -53,8 +56,8 @@ namespace template
             float horzStep = 1f / screen.width;
             float vertStep = 1f / screen.height;
             float u = 0, v = 0;
-            for (int y = 0; y < screen.height; ++y, u = 0, v+= vertStep)
-                for(int x=0; x<screen.width; ++x, u += horzStep)
+            for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep)
+                for (int x = 0; x < screen.width; ++x, u += horzStep)
                 {
                     screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
                     Vector3 dir = screenPoint - camera.Position;  //A vector from the camera to that screen point
@@ -64,9 +67,16 @@ namespace template
                     //   p.Intersect(ray);  //Calculate the intersection with all the primitives
 
                     byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
-                    screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                    if (!camera.IsMoving)
+                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                    else
+                    {
+                        if (random.Next(10) == 0)
+                            screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                    }
+
                     //Draw some rays on the debug screen
-                    if (y == (debugScreen.height/2) && x % 30 == 0)
+                    if (y == (debugScreen.height / 2) && x % 30 == 0)
                     {
                         debugScreen.Line(
                             TX(camera.Position.X, debugScreen),
@@ -89,6 +99,11 @@ namespace template
         public static Scene Scene
         {
             get { return scene; }
+        }
+
+        public static Camera Camera
+        {
+            get { return camera; }
         }
         #endregion
     }
