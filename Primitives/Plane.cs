@@ -15,13 +15,19 @@ namespace template
         public Plane(Vector3 normal, float d) : base(normal)
         {
             this.normal = normal;
+<<<<<<< HEAD
             this.d = -d;
+=======
+            this.d = d;
+            this.PrimitiveName = "Plane";
+>>>>>>> bc9a740d88a85bab08b88ec8a27e76c335c561a1
         }
 
         public Plane(Vector3 normal, float d, Vector3 color) : base(normal, color)
         {
             this.normal = normal;
             this.d = d;
+            this.PrimitiveName = "Plane";
         }
 
         public override void Intersect(Ray ray)

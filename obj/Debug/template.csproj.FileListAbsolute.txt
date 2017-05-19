@@ -12,3 +12,10 @@ S:\GraphicsP2\bin\Debug\OpenTK.dll
 S:\GraphicsP2\obj\Debug\template.csprojResolveAssemblyReference.cache
 S:\GraphicsP2\obj\Debug\template.exe
 S:\GraphicsP2\obj\Debug\template.pdb
+S:\GraphicsP22\bin\Debug\template.exe.config
+S:\GraphicsP22\obj\Debug\template.exe
+S:\GraphicsP22\obj\Debug\template.pdb
+S:\GraphicsP22\bin\Debug\template.exe
+S:\GraphicsP22\bin\Debug\template.pdb
+S:\GraphicsP22\bin\Debug\OpenTK.dll
+S:\GraphicsP22\obj\Debug\template.csprojResolveAssemblyReference.cache
