@@ -22,7 +22,7 @@ namespace template
         public Plane(Vector3 normal, float d, Vector3 color) : base(normal, color)
         {
             this.normal = normal;
-            this.d = d;
+            this.d = -d;
             this.PrimitiveName = "Plane";
         }
 

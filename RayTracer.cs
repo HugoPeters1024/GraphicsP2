@@ -21,11 +21,11 @@ namespace template
 
             scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
-            scene.AddLight(new Light(new Vector3(0, 2, -0.2f)) { Intensity = Vector3.One * 16 });
+            scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = Vector3.One * 8 });
 
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere"});
-            scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
-            scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1) { PrimitiveName = "Floor"});
+            //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)

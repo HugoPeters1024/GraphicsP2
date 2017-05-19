@@ -37,7 +37,6 @@ namespace template
             foreach (Light l in lights)
             {
                 l.DrawDebug(debugScreen);
-                Console.WriteLine("Drawing a light!");
             }
         }
 
