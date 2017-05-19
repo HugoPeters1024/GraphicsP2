@@ -34,10 +34,11 @@ namespace template
             float t = Vector3.Dot(c, ray.Direction);
             Vector3 q = c - t * ray.Direction;
             float p2 = Vector3.Dot(q, q);
-            if (p2 > radius * radius)
+            float r2 = radius * radius;
+            if (p2 > r2)
                 return;
 
-            t -= (float)Math.Sqrt(radius * radius - p2);
+            t -= (float)Math.Sqrt(r2 - p2);
             if (t < ray.Intsect.Distance && t > 0)
             {
                 Vector3 point = ray.Origin + t * ray.Direction; //Point of contact on the circle

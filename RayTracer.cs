@@ -18,7 +18,7 @@ namespace template
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)));
-            scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
+            //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)));
             scene.AddPrimitive(new Floor(new Vector3(0, -1, 0), -1));
         }
 
@@ -73,6 +73,8 @@ namespace template
                             TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
                             TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
                             0x00ff00);
+
+                        Console.WriteLine("Normal: " + ray.Intsect.Normal + "  --  Direction: "+ray.Direction);
                     }
                 }
         }
