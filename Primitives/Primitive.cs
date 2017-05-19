@@ -51,9 +51,10 @@ namespace template
             get { return color; }
         }
 
-        public float Reflect
+        public float Reflectivity
         {
             get { return reflect; }
+            set { reflect = value; }
         }
         #endregion
     }

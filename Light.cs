@@ -25,6 +25,12 @@ namespace template
             this.intensity = intensity;
         }
 
+        public Light(Vector3 position, float intensity)
+        {
+            this.position = position;
+            this.intensity = new Vector3(intensity);
+        }
+
         public void DrawDebug(Surface screen)
         {
             DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.One);

@@ -15,7 +15,7 @@ namespace template
         public Plane(Vector3 normal, float d) : base(normal)
         {
             this.normal = normal;
-            this.d = d;
+            this.d = -d;
         }
 
         public Plane(Vector3 normal, float d, Vector3 color) : base(normal, color)
