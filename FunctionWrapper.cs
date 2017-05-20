@@ -9,7 +9,7 @@ namespace template
 {
     static class FunctionWrapper
     {
-        public static float EPS { get { return 0.001f; } }
+        public static float EPS { get { return 0.000001f; } }
         public static int MAX_DEPTH { get { return 4; } }
 
         /// <summary>

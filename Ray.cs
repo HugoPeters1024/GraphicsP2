@@ -16,7 +16,7 @@ namespace template
 
         public Ray(Vector3 direction, Vector3 origin)
         {
-            this.direction = Vector3.Normalize(direction);
+            this.direction = direction;
             intsect = new Intersection(null, 50, this.direction);
             this.origin = origin;
         }
@@ -33,8 +33,11 @@ namespace template
             {
                 if (intsect.Primitive.Reflectivity == 0)
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
-                else
-                    return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
+                
+                if (intsect.Primitive.Reflectivity == 1)
+                    return (new Ray(ReflectedRay, origin + direction * (intsect.Distance + EPS)).GetColor(s, depth + 1));
+
+                return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
@@ -66,13 +69,14 @@ namespace template
                 float NdotL = Vector3.Dot(N, L);
                 if (NdotL > 0)
                 {
-                    float dist = (float)Math.Sqrt(Vector3.Dot(L, L));
+                    float L2 = Vector3.Dot(L, L);
+                    float dist = (float)Math.Sqrt(L2);
                     L *= (1.0f / dist);
                     if (IsVisible(I, L, dist, s))
                     {
-                        float attenuation = (1f / (dist * dist)) - EPS;
+                        float attenuation = (1f / (L2)) - EPS;
                         if (attenuation > 0)
-                            color += Clamp(light.Intensity * NdotL * attenuation);
+                            color += Clamp(light.Intensity * Vector3.Dot(N, L) * attenuation);
                     }
                 }
             }
@@ -81,7 +85,7 @@ namespace template
 
         bool IsVisible(Vector3 I, Vector3 L, float dist, Scene s)
         {
-            Ray shadowRay = new Ray(L, I + EPS * Vector3.Normalize(L));
+            Ray shadowRay = new Ray(L, I + EPS * L);
             foreach(Primitive p in s.Primitives)
             {
                 p.Intersect(shadowRay);
@@ -112,7 +116,7 @@ namespace template
 
         public Vector3 ReflectedRay
         {
-            get { return direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal; }
+            get { return Vector3.Normalize(direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal); }
         }
         #endregion
     }

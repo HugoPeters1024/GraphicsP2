@@ -28,6 +28,7 @@ namespace template
 
         public override void Intersect(Ray ray)
         {
+            if (Vector3.Dot(ray.Direction, -normal) < 0) return;
             float t = -(Vector3.Dot(ray.Origin, normal) + d) / (Vector3.Dot(ray.Direction, normal));
 
             if (t > 0 && t < ray.Intsect.Distance)

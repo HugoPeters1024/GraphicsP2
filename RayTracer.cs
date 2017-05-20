@@ -21,16 +21,17 @@ namespace template
             random = new Random();
 
 
-            scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
-            scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
+           // scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
+           // scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
             scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
-            scene.AddLight(new Light(new Vector3(0, 5, 0), new Vector3(1,1,0.4f)*1000));
-            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20000));
+            scene.AddLight(new Light(new Vector3(0, 10, 0), new Vector3(1,1,0.4f)*100));
+            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
 
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(0f)) { PrimitiveName = "White Sphere", Reflectivity = 0.4f});
+            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.5f});
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0f});
-            //scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), 6f) { PrimitiveName = "Roof" });
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.3f});
+            //scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -2f) { PrimitiveName = "Roof" , Color = new Vector3(1, 1, 0)});
+            scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -63,14 +64,14 @@ namespace template
                 {
                     screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
                     Vector3 dir = screenPoint - camera.Position;  //A vector from the camera to that screen point
-                    ray = new Ray(dir, camera.Position);  //Create a primary ray from there (dir is normalized in the constructer)
+                    ray = new Ray(dir.Normalized(), camera.Position);  //Create a primary ray from there
 
                     //foreach (Primitive p in scene.Primitives)
                     //   p.Intersect(ray);  //Calculate the intersection with all the primitives
 
                     byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
                     if (!camera.IsMoving)
-                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene)));
                     else
                     {
                         if (random.Next(25) == 0)
@@ -78,7 +79,7 @@ namespace template
                     }
 
                     //Draw some rays on the debug screen
-                    if (y == (debugScreen.height / 2) && x % 30 == 0)
+                    if (y == (debugScreen.height / 2) && x % 40 == 0)
                     {
                         debugScreen.Line(
                             TX(camera.Position.X, debugScreen),
