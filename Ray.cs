@@ -71,12 +71,12 @@ namespace template
                 {
                     float L2 = Vector3.Dot(L, L);
                     float dist = (float)Math.Sqrt(L2);
-                    L *= (1.0f / dist);
+                    L.Normalize();
                     if (IsVisible(I, L, dist, s))
                     {
                         float attenuation = (1f / (L2)) - EPS;
                         if (attenuation > 0)
-                            color += Clamp(light.Intensity * Vector3.Dot(N, L) * attenuation);
+                            color = Clamp(color + light.Intensity * Vector3.Dot(N, L) * attenuation);
                     }
                 }
             }
