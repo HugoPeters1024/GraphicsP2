@@ -41,9 +41,10 @@ namespace template
         //Company surfaces by an offset and perform a memcopy
         public void AddSurface(int xs, int ys, Surface s)
         {
-            for (int x = 0; x < s.width; ++x)
-                for (int y = 0; y < s.height; ++y)
-                    screen.pixels[xs + x + (ys + y) * screen.width] = s.pixels[x + s.width * y];
+            int offset = ys * screen.width;
+            for (int y = 0; y < s.height; ++y, offset += screen.width)
+                for(int x=0; x<s.height; ++x)
+                    screen.pixels[xs + x + offset] = s.pixels[x + s.width * y];
         }
     }
 

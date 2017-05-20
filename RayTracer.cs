@@ -59,7 +59,8 @@ namespace template
             float horzStep = 1f / screen.width;
             float vertStep = 1f / screen.height;
             float u = 0, v = 0;
-            for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep)
+            int offset = 0;
+            for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep, offset += screen.width)
                 for (int x = 0; x < screen.width; ++x, u += horzStep)
                 {
                     screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
@@ -69,17 +70,17 @@ namespace template
                     //foreach (Primitive p in scene.Primitives)
                     //   p.Intersect(ray);  //Calculate the intersection with all the primitives
 
-                    byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
+                    //byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
                     if (!camera.IsMoving)
-                        screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetColor(scene)));
+                        screen.pixels[x + offset] = CreateColor(Clamp(ray.GetColor(scene)));
                     else
                     {
                         if (random.Next(25) == 0)
-                            screen.pixels[x + screen.width * y] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                            screen.pixels[x + offset] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     }
 
                     //Draw some rays on the debug screen
-                    if (y == (debugScreen.height / 2) && x % 40 == 0)
+                    if (y == (debugScreen.height >> 1) && x % 32 == 0)
                     {
                         debugScreen.Line(
                             TX(camera.Position.X, debugScreen),

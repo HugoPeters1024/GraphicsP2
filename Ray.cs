@@ -17,7 +17,7 @@ namespace template
         public Ray(Vector3 direction, Vector3 origin)
         {
             this.direction = direction;
-            intsect = new Intersection(null, 50, this.direction);
+            intsect = new Intersection(null, 1 << 8, this.direction);
             this.origin = origin;
         }
 
