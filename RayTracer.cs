@@ -16,7 +16,7 @@ namespace template
 
         static int MSAA;
         static float msaaValue;
-        float axisoffset;
+        float axisoffsetX, axisoffsetY;
         public static int y = 0;
         float u = 0, v = 0;
         int offset = 0;
@@ -26,16 +26,18 @@ namespace template
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
             random = new Random();
-            MSAA = 16;
+            MSAA = 1;
             msaaValue = (float)Math.Sqrt(MSAA);
-            axisoffset = 1f / (512 * msaaValue);
+            axisoffsetX = 1f / (OpenTKApp.VIEW_WIDTH * msaaValue);
+            axisoffsetY = 1f / (OpenTKApp.VIEW_HEIGHT * msaaValue);
 
             // scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
             // scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
             // scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
-            scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1,1,0.4f)*100));
-            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
-            scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 1, 0)*10));
+            //scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1,1,0.4f)*100));
+            //scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
+            //scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 1, 0)*10));
+            scene.AddLight(new SpotLight(camera.Position, new Vector3(0,0,5), 5f));
 
             scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.5f});
             scene.AddPrimitive(new Sphere(new Vector3(-1.5f, 1.2f, 1f), 0.7f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere", Reflectivity = 0.01f});
@@ -99,7 +101,7 @@ namespace template
                 for (float subY = 0; subY < msaaValue; subY++)
                     for (float subX = 0; subX < msaaValue; subX++)
                     {
-                        subScreenPoint = new Vector3(screenPoint.X + (axisoffset * subX), screenPoint.Y + (axisoffset * subY), screenPoint.Z);
+                        subScreenPoint = new Vector3(screenPoint.X + (axisoffsetX * subX), screenPoint.Y + (axisoffsetY * subY), screenPoint.Z);
                         //subScreenPoint = screenPoint;
                         Vector3 dir = subScreenPoint - camera.Position;  //A vector from the camera to that screen point
                         ray = new Ray(dir.Normalized(), camera.Position);  //Create a primary ray from there

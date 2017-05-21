@@ -65,18 +65,58 @@ namespace template
             Vector3 color = Vector3.Zero;
             foreach (Light light in s.Lights)
             {
-                Vector3 L = light.Origin - I;
-                float NdotL = Vector3.Dot(N, L);
-                if (NdotL > 0)
+                if (light is SpotLight)
                 {
-                    float L2 = Vector3.Dot(L, L);
-                    float dist = (float)Math.Sqrt(L2);
-                    L.Normalize();
-                    if (IsVisible(I, L, dist, s))
+                    SpotLight spot = light as SpotLight;
+                    Vector3 c = spot.Origin - I;
+                    float Ndotc = Vector3.Dot(N, c);
+                    if (Ndotc > 0)
                     {
-                        float attenuation = (1f / (L2)) - EPS;
-                        if (attenuation > 0)
-                            color = Clamp(color + light.Intensity * Vector3.Dot(N, L) * attenuation);
+                        float c2 = Vector3.Dot(c, c);
+                        float t = Vector3.Dot(c, spot.Direction);
+                        Vector3 distVec = I - (spot.Origin - (t * spot.Direction));
+                        float dist2 = Vector3.Dot(distVec, distVec);
+                        float dist = (float)Math.Sqrt(dist2);
+                        c.Normalize();
+                        if (IsVisible(I, c, dist, s))
+                        {
+                            if (dist > spot.Radius)
+                                return color;
+                            else
+                            {
+                                Vector3 L = spot.Origin - I;
+                                float NdotL = Vector3.Dot(N, L);
+                                if (NdotL > 0)
+                                {
+                                    float L2 = Vector3.Dot(L, L);
+                                    float dist3 = (float)Math.Sqrt(L2);
+                                    L.Normalize();
+                                    if (IsVisible(I, L, dist3, s))
+                                    {
+                                        float attenuation = (1f / (L2)) - EPS;
+                                        if (attenuation > 0)
+                                            color = Clamp(color + spot.Intensity * NdotL * attenuation);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Vector3 L = light.Origin - I;
+                    float NdotL = Vector3.Dot(N, L);
+                    if (NdotL > 0)
+                    {
+                        float L2 = Vector3.Dot(L, L);
+                        float dist = (float)Math.Sqrt(L2);
+                        L.Normalize();
+                        if (IsVisible(I, L, dist, s))
+                        {
+                            float attenuation = (1f / (L2)) - EPS;
+                            if (attenuation > 0)
+                                color = Clamp(color + light.Intensity * NdotL * attenuation);
+                        }
                     }
                 }
             }
