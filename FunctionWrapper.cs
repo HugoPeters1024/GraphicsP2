@@ -9,8 +9,10 @@ namespace template
 {
     static class FunctionWrapper
     {
-        public static float EPS { get { return 0.0001f; } }
-        public static int MAX_DEPTH { get { return 16; } }
+        public const float EPS = 0.0001f;
+        public const int MAX_DEPTH = 16;
+        public const int GLOSS = 2;
+        static Random rand = new Random();
 
         /// <summary>
         /// converts values of x from -range/2 ... range/2 to 0 ...640
@@ -94,6 +96,11 @@ namespace template
         public static int CreateColor(Vector3 c)
         {
             return (int)(c.X * 255) << 16 ^ (int)(c.Y * 255) << 8 ^ (int)(c.Z * 255);
+        }
+
+        public static Random Rand
+        {
+            get { return rand; }
         }
     }
 }

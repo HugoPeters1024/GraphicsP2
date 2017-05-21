@@ -14,7 +14,7 @@ namespace template
         Vector3 direction;
         Vector3 origin;
         Intersection intsect;
-        Ray reflectionRay;
+        //Ray reflectionRay;
 
         public Ray(Vector3 direction, Vector3 origin)
         {
@@ -37,18 +37,14 @@ namespace template
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
 
 
-                reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS));
-
                 if (intsect.Primitive.Reflectivity == 1)
-                {
-                    return (reflectionRay.GetColor(s, depth + 1));
-                }
+                    return new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS)).GetColor(s, depth + 1); 
 
                 return intsect.Primitive.Color * DirectIllumination(origin + direction * (intsect.Distance - EPS), intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
-                        (reflectionRay.GetColor(s, depth + 1));
+                        (new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS)).GetColor(s, depth + 1));
             }
             return Vector3.Zero;
         }
@@ -69,7 +65,7 @@ namespace template
                         { 
                     DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug 
                     }
-                    reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance-EPS));
+                    Ray reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance-EPS));
                     reflectionRay.GetStaticColor(s, depth + 1);
                     Debugger.AddReflectedRay(reflectionRay);
                 }
@@ -156,11 +152,6 @@ namespace template
         public Vector3 ReflectedDirection
         {
             get { return direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal; }
-        }
-
-        public Ray ReflectionRay
-        {
-            get { return reflectionRay; }
         }
         #endregion
     }
