@@ -24,7 +24,7 @@ namespace template
         float u = 0, v = 0;
         int offset = 0;
 
-        public RayTracer()
+        public RayTracer(Surface screen, Surface debugScreen)
         {
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
@@ -48,15 +48,13 @@ namespace template
             scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof" , Color = new Vector3(0, 0, 1)});
             scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
             scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
+
+            Debugger.Init(debugScreen, scene, camera);
         }
 
         public void Draw(Surface screen, Surface debugScreen)
         {
             camera.Update();
-
-            float vertStep = 1f / screen.height;
-
-
             if (!camera.IsMoving)
             {
                 DrawMSAA(screen, debugScreen);
@@ -137,7 +135,7 @@ namespace template
             }
         }
 
-        void DrawNoMSAA(Surface screen, Surface debugScreen)
+        public void DrawNoMSAA(Surface screen, Surface debugScreen)
         {
             Ray ray;
             Vector3 screenPoint;

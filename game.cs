@@ -23,9 +23,8 @@ namespace template
             //Screen size is defined in the template.cs
             viewScreen = new Surface(VIEW_WIDTH, VIEW_HEIGHT);
             debugScreen = new Surface(DEBUG_WIDTH, DEBUG_HEIGHT);
-            rayTracer = new RayTracer();
+            rayTracer = new RayTracer(screen, debugScreen);
             KeyboardHandler.Init();
-            Debugger.Init(debugScreen, RayTracer.Scene, RayTracer.Camera);
             Debugger.DrawDebug();
         }
 
