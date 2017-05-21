@@ -38,10 +38,11 @@ namespace template
 
 
                 reflectionRay = new Ray(ReflectedRay, origin + direction * (intsect.Distance - EPS));
+                if (DEBUGSWITCH)
+                   Debugger.AddReflectedRay(reflectionRay);
+
                 if (intsect.Primitive.Reflectivity == 1)
-                {
                     return (reflectionRay.GetColor(s, depth + 1));
-                }
 
                 return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)

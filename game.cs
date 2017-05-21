@@ -33,7 +33,7 @@ namespace template
         { 
             KeyboardHandler.Update();
             screen.Clear(0);
-            rayTracer.DrawRayTracer(viewScreen, debugScreen);
+            rayTracer.Draw(viewScreen, debugScreen);
 
             AddSurface(0, 0, viewScreen);
             AddSurface(screen.width - debugScreen.width, 0, debugScreen);

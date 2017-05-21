@@ -16,6 +16,7 @@ namespace template
 
         int msaa;
         int msaaValue;
+        float msaaFactor;
         float axisoffsetX, axisoffsetY;
         int yoffset;
         int yjump;
@@ -31,14 +32,12 @@ namespace template
             MSAA = 1;
             yoffset = 0;
             msaaValue = (int)Math.Sqrt(MSAA);
-            axisoffsetX = 1f / (512 * msaaValue);
-            axisoffsetY = 1f / (512 * msaaValue);
 
             scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
             scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
             scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
             scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
-            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(0, 0, 1)*100));
+            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1)*10));
 
 
             scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
@@ -51,13 +50,7 @@ namespace template
             scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
         }
 
-        public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
-        {
-            viewScreen.Print("RayTracer", 0, 0, 0xffffff);
-            Draw(viewScreen, debugScreen);
-        }
-
-        void Draw(Surface screen, Surface debugScreen)
+        public void Draw(Surface screen, Surface debugScreen)
         {
             camera.Update();
 
@@ -83,7 +76,7 @@ namespace template
         {
             Vector3 subScreenPoint;
             Vector3 finalColor = new Vector3(0);
-            Ray ray;
+            Ray ray = new Ray(Vector3.UnitX, Vector3.Zero);
             Vector3 screenPoint;
             Vector3 dir;
             Vector3 screenHorz = camera.TopRight - camera.TopLeft; //Horizontal vector of the screen
@@ -97,6 +90,7 @@ namespace template
                 for (int x = 0; x < screen.width; ++x, u += horzStep)
                 {
                     screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
+                    dir = screenPoint - camera.Position;
                     finalColor = new Vector3(0);
                     msX = 0;
                     msY = 0;
@@ -120,10 +114,12 @@ namespace template
 
                         }
 
-                    finalColor = finalColor / MSAA;
-                    //Console.WriteLine("OutLoop: " + finalColor);    
-                    screen.pixels[x + offset] = CreateColor(finalColor);
+                    screen.pixels[x + offset] = CreateColor(finalColor * msaaFactor);
+                    
                 }
+            screen.Line(0, yoffset + yjump, screen.width, yoffset + yjump, 0xff00ff);
+            if (screen.height - yoffset > yjump+1)
+                screen.Print("MSAAx" + MSAA.ToString(), screen.width / 2 - 20, yoffset + yjump + 2, 0xffffff);
 
             if (yoffset < screen.height - yjump)
             {
@@ -167,7 +163,7 @@ namespace template
                     else
                     {
                         if (random.Next(10) == 0 || y == screen.height >> 1)
-                            screen.pixels[x + offset] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
+                            screen.pixels[x + offset] = CreateColor(Clamp(ray.GetStaticColor(scene) * Vector3.Dot(ray.Direction, -ray.Intsect.Normal)));
                     }
 
 
@@ -197,7 +193,13 @@ namespace template
         public int MSAA
         {
             get { return msaa; }
-            set { msaa = value; msaaValue = (int)Math.Sqrt(msaa); yjump = 64 / msaa; }
+            set { msaa = value;
+                msaaValue = (int)Math.Sqrt(msaa);
+                yjump = 64 / msaaValue;
+                msaaFactor = 1f / msaa;
+                axisoffsetX = 1f / (Game.VIEW_WIDTH * msaaValue);
+                axisoffsetY = 1f / (Game.VIEW_HEIGHT * msaaValue);
+            }
         }
         #endregion
     }

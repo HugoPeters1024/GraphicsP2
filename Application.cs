@@ -17,7 +17,7 @@ namespace template
 
         public void Draw(Surface viewScreen, Surface debugScreen)
         {
-            rayTracer.DrawRayTracer(viewScreen, debugScreen);
+            rayTracer.Draw(viewScreen, debugScreen);
         }
     }
 }
