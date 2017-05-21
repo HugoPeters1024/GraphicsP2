@@ -68,29 +68,31 @@ namespace template
                 if (light is SpotLight)
                 {
                     SpotLight spot = light as SpotLight;
-                    Vector3 c = spot.Origin - I;
-                    float Ndotc = Vector3.Dot(N, c);
-                    if (Ndotc > 0)
+                    Vector3 L = spot.Origin - I;
+                    float NdotL = Vector3.Dot(N, L);
+                    
+                    if (NdotL > 0)
                     {
-                        float c2 = Vector3.Dot(c, c);
-                        float t = Vector3.Dot(c, spot.Direction);
+                        float L2 = Vector3.Dot(L, L);
+                        float t = Vector3.Dot(L, spot.Direction);
                         Vector3 distVec = I - (spot.Origin - (t * spot.Direction));
                         float dist2 = Vector3.Dot(distVec, distVec);
                         float dist = (float)Math.Sqrt(dist2);
-                        c.Normalize();
-                        if (IsVisible(I, c, dist, s))
+                        L.Normalize();
+                        if (IsVisible(I, L, dist, s))
                         {
                             if (dist > spot.GetRadius(t))
                                 return color;
                             else
                             {
-                                Vector3 intensity = spot.Intensity;// * (dist / spot.GetRadius(t));
-                                    float dist3 = (float)Math.Sqrt(c2);
-                                if (IsVisible(I, c, dist3, s))
+                                //Vector3 intensity = spot.Intensity * (Clamp(NdotL / dist2));
+                                Vector3 intensity = spot.GetIntensity(dist2, t) * spot.GetIntensity(dist2, t);
+                                float dist3 = (float)Math.Sqrt(L2);
+                                if (IsVisible(I, L, dist3, s))
                                 {
-                                    float attenuation = (1f / (c2)) - EPS;
+                                    float attenuation = (1f / (L2)) - EPS;
                                     if (attenuation > 0)
-                                        color = Clamp(color + intensity * Ndotc * attenuation);
+                                        color = Clamp(color + intensity * NdotL * attenuation);
                                 }
                             }
                         }

@@ -12,11 +12,12 @@ namespace template
         float radiusCalc;
         float radiusScalar = 1f;
 
-        public SpotLight(Vector3 position, Vector3 target) : base(position)
+        public SpotLight(Vector3 position, Vector3 target, float rScalar) : base(position)
         {
             this.direction = target - position;
             this.direction = Vector3.Normalize(direction);
-            radiusCalc = radiusScalar * (float)Math.Cos(60);
+            radiusScalar = rScalar;
+            radiusCalc = rScalar * (float)Math.Cos(60);
         }
 
         public SpotLight(Vector3 position, Vector3 intensity, Vector3 target) : base(position, intensity)
@@ -42,6 +43,11 @@ namespace template
         public float GetRadius(float dist)
         {
             return dist * radiusCalc;
+        }
+
+        public Vector3 GetIntensity(float dist, float t)
+        {
+            return new Vector3(Clamp(GetRadius(t) / dist));
         }
 
         #region Properties
