@@ -130,23 +130,10 @@ namespace template
             #region Others
             if (KeyDown(Key.I))
             {
-                if (RayTracer.mSAA == 1)
-                {
-                    Console.WriteLine(4);
-                    RayTracer.mSAA = 4;
-                }
-                else
-                {
-                    Console.WriteLine(1);
-                    RayTracer.mSAA = 1;
-                }
-                
-                /*
                 //decrease FOV
                 FOVd -= 5;
                 FOVr = FOVd * FOVcalc;
                 distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
-                */
             }
 
             if (KeyDown(Key.K))

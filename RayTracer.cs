@@ -214,16 +214,6 @@ namespace template
         {
             get { return camera; }
         }
-
-        public static int mSAA
-        {
-            get { return MSAA; }
-            set
-            {
-                MSAA = value;
-                msaaValue = (float)Math.Sqrt(MSAA);
-            }
-        }
         #endregion
     }
 }
