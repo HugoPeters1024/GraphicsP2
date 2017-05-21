@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace template
 {
-    class Debugger
+    public static class Debugger
     {
+        //public static List<Ray> PrimaryRays = new List<Ray>();
     }
 }
