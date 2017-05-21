@@ -39,7 +39,7 @@ namespace template
 
         public void Update()
         {
-            if (IsAnyKeyDown())
+            if (KeyboardHandler.IsAnyKeyDown())
             {
                 IsMoving = true;
             }

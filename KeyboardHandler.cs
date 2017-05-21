@@ -20,7 +20,7 @@ namespace template
         public static void Update()
         {
             prevKeyboardState = curKeyboardState;
-            curKeyboardState = Keyboard.GetState();         
+            curKeyboardState = Keyboard.GetState();
         }
 
         public static bool KeyPressed(Key k)
@@ -35,7 +35,7 @@ namespace template
 
         public static bool IsAnyKeyDown()
         {
-            return curKeyboardState.IsKeyDown(Key.Space);
+            return curKeyboardState.IsKeyDown(Key.Space) || curKeyboardState.IsAnyKeyDown;
         }
     }
 }
