@@ -12,23 +12,25 @@ namespace template
         public Surface screen;
         Surface debugScreen;
         Surface viewScreen;
-        Application app;
+        RayTracer rayTracer;
         // initialize
         public void Init()
         {
             //Screen size is defined in the template.cs
             viewScreen = new Surface(OpenTKApp.VIEW_WIDTH, OpenTKApp.VIEW_HEIGHT);
             debugScreen = new Surface(OpenTKApp.DEBUG_WIDTH, OpenTKApp.DEBUG_HEIGHT);
-            app = new Application();
+            rayTracer = new RayTracer();
+
             KeyboardHandler.Init();
+            Debugger.Init(debugScreen, RayTracer.Scene, RayTracer.Camera);
+            Debugger.DrawDebug();
         }
 
         public void Tick()
         { 
             KeyboardHandler.Update();
             screen.Clear(0);
-            debugScreen.Clear(0);
-            app.Draw(viewScreen, debugScreen);
+            rayTracer.Draw(viewScreen, debugScreen);
 
             AddSurface(0, 0, viewScreen);
             AddSurface(screen.width - debugScreen.width, 0, debugScreen);

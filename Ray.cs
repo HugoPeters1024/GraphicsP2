@@ -10,9 +10,11 @@ namespace template
 {
     class Ray
     {
+        public static bool DEBUGSWITCH = false;
         Vector3 direction;
         Vector3 origin;
         Intersection intsect;
+        Ray reflectionRay;
 
         public Ray(Vector3 direction, Vector3 origin)
         {
@@ -33,15 +35,20 @@ namespace template
             {
                 if (intsect.Primitive.Reflectivity == 0)
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
-                
-                if (intsect.Primitive.Reflectivity == 1)
-                    return (new Ray(ReflectedRay, origin + direction * (intsect.Distance + EPS)).GetColor(s, depth + 1));
 
-                return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
+
+                reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS));
+
+                if (intsect.Primitive.Reflectivity == 1)
+                {
+                    return (reflectionRay.GetColor(s, depth + 1));
+                }
+
+                return intsect.Primitive.Color * DirectIllumination(origin + direction * (intsect.Distance - EPS), intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
-                        (new Ray(ReflectedRay, origin + direction * (intsect.Distance+EPS)).GetColor(s, depth + 1));
+                        (reflectionRay.GetColor(s, depth + 1));
             }
             return Vector3.Zero;
         }
@@ -55,7 +62,19 @@ namespace template
                 p.Intersect(this);
             }
             if (intsect.Primitive != null)
+            {
+                if (DEBUGSWITCH)
+                {
+                    if (depth == 0)
+                        { 
+                    DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug 
+                    }
+                    reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance-EPS));
+                    reflectionRay.GetStaticColor(s, depth + 1);
+                    Debugger.AddReflectedRay(reflectionRay);
+                }
                 return intsect.Primitive.Color;
+            }
             else
                 return Vector3.Zero;
         }
@@ -121,14 +140,34 @@ namespace template
 
         bool IsVisible(Vector3 I, Vector3 L, float dist, Scene s)
         {
-            Ray shadowRay = new Ray(L, I + EPS * L);
+            Ray shadowRay = new Ray(L, I);
             foreach(Primitive p in s.Primitives)
             {
                 p.Intersect(shadowRay);
-                if (shadowRay.intsect.Primitive != null && shadowRay.intsect.Distance < (dist - 2 * EPS))
+                if (shadowRay.intsect.Distance < (dist - 2 * EPS))
                     return false;
             }
+            shadowRay.intsect.Distance = dist;
+
+            if (DEBUGSWITCH == true)
+            {
+                Debugger.AddShadowRay(shadowRay);
+            }
             return true;
+        }
+
+        public void DrawDebug(Surface screen, int color, bool shadow = false)
+        {
+            if (shadow && intsect.Primitive == null)
+            {
+                intsect.Distance = 1f;
+            }
+            screen.Line(
+                TX(origin.X, screen),
+                TY(origin.Z, screen),
+                TX(origin.X + direction.X * intsect.Distance, screen),
+                TY(origin.Z + direction.Z * intsect.Distance, screen),
+                color);
         }
 
 
@@ -150,9 +189,14 @@ namespace template
             set { intsect = value; }
         }
 
-        public Vector3 ReflectedRay
+        public Vector3 ReflectedDirection
         {
-            get { return Vector3.Normalize(direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal); }
+            get { return direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal; }
+        }
+
+        public Ray ReflectionRay
+        {
+            get { return reflectionRay; }
         }
         #endregion
     }

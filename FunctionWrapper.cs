@@ -9,8 +9,8 @@ namespace template
 {
     static class FunctionWrapper
     {
-        public static float EPS { get { return 0.001f; } }
-        public static int MAX_DEPTH { get { return 4; } }
+        public static float EPS { get { return 0.0001f; } }
+        public static int MAX_DEPTH { get { return 16; } }
 
         /// <summary>
         /// converts values of x from -range/2 ... range/2 to 0 ...640
