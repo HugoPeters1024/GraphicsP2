@@ -21,18 +21,23 @@ namespace template
             random = new Random();
 
 
-           // scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
-           // scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
-           // scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
-            scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1,1,0.4f)*100));
+            // scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
+            // scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
+            // scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
+            scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1, 1, 0.4f) * 1));
             scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
-            scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 1, 0)*10));
+            scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(0, 0, 1)*100));
 
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.5f});
+            scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
+            scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 0.5f, 0.5f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
             scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
             scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof" , Color = new Vector3(0, 0, 1)});
             scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
+            scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
         }
 
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
@@ -76,14 +81,15 @@ namespace template
                         screen.pixels[x + offset] = CreateColor(Clamp(ray.GetColor(scene)));
                     else
                     {
-                        if (random.Next(25) == 0)
+                        if (random.Next(15) == 0)
                             screen.pixels[x + offset] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     }
 
                     //Draw some rays on the debug screen
                     if (y == (debugScreen.height >> 1) && x % 32 == 0)
                     {
-                        debugScreen.Line(
+                        /*
+                            debugScreen.Line(
                             TX(camera.Position.X, debugScreen),
                             TY(camera.Position.Z, debugScreen),
                             TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
@@ -95,7 +101,9 @@ namespace template
                             TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
                             TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
                             TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
-                            0x00ff00);
+                            0x00ff00); */
+
+                        ray.DrawDebug(debugScreen, 0xff0000);
                     }
                 }
         }

@@ -13,6 +13,7 @@ namespace template
         Vector3 direction;
         Vector3 origin;
         Intersection intsect;
+        Ray shadowRay, reflectionRay;
 
         public Ray(Vector3 direction, Vector3 origin)
         {
@@ -33,15 +34,19 @@ namespace template
             {
                 if (intsect.Primitive.Reflectivity == 0)
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
-                
+
+
+                reflectionRay = new Ray(ReflectedRay, origin + direction * (intsect.Distance + EPS));
                 if (intsect.Primitive.Reflectivity == 1)
-                    return (new Ray(ReflectedRay, origin + direction * (intsect.Distance + EPS)).GetColor(s, depth + 1));
+                {
+                    return (reflectionRay.GetColor(s, depth + 1));
+                }
 
                 return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
-                        (new Ray(ReflectedRay, origin + direction * (intsect.Distance+EPS)).GetColor(s, depth + 1));
+                        (reflectionRay.GetColor(s, depth + 1));
             }
             return Vector3.Zero;
         }
@@ -85,14 +90,32 @@ namespace template
 
         bool IsVisible(Vector3 I, Vector3 L, float dist, Scene s)
         {
-            Ray shadowRay = new Ray(L, I + EPS * L);
+            shadowRay = new Ray(L, I + L * EPS);
             foreach(Primitive p in s.Primitives)
             {
                 p.Intersect(shadowRay);
-                if (shadowRay.intsect.Primitive != null && shadowRay.intsect.Distance < (dist - 2 * EPS))
+                if (shadowRay.intsect.Distance < (dist - 2 * EPS))
                     return false;
             }
+            shadowRay.intsect.Distance = dist;
             return true;
+        }
+
+        public void DrawDebug(Surface screen, int color, bool shadow = false)
+        {
+            if (shadow && intsect.Primitive == null)
+            {
+                intsect.Distance = 1f;
+            }
+            screen.Line(
+                TX(origin.X, screen),
+                TY(origin.Z, screen),
+                TX(origin.X + direction.X * intsect.Distance, screen),
+                TY(origin.Z + direction.Z * intsect.Distance, screen),
+                color);
+
+            if (shadowRay != null)
+                shadowRay.DrawDebug(screen, 0x0000ff, true);
         }
 
 

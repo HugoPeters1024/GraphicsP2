@@ -5,9 +5,9 @@ namespace template
 {
     class Game
     {
-        public static int VIEW_WIDTH = OpenTKApp.APP_WIDTH/2;
+        public static int VIEW_WIDTH = OpenTKApp.APP_WIDTH / 2;
         public static int VIEW_HEIGHT = OpenTKApp.APP_HEIGHT;
-        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH/2;
+        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH / 2;
         public static int DEBUG_HEIGHT = OpenTKApp.APP_HEIGHT;
         public static float SCENE_WIDTH = 10f;
         public static float SCENE_HEIGHT = SCENE_WIDTH;
