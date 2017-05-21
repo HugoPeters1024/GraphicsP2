@@ -37,14 +37,14 @@ namespace template
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
 
 
-                reflectionRay = new Ray(ReflectedRay, origin + direction * (intsect.Distance - EPS));
-                if (DEBUGSWITCH)
-                   Debugger.AddReflectedRay(reflectionRay);
+                reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS));
 
                 if (intsect.Primitive.Reflectivity == 1)
+                {
                     return (reflectionRay.GetColor(s, depth + 1));
+                }
 
-                return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s) *
+                return intsect.Primitive.Color * DirectIllumination(origin + direction * (intsect.Distance - EPS), intsect.Normal, s) *
                         (1f - intsect.Primitive.Reflectivity)
                         +
                         intsect.Primitive.Reflectivity *
@@ -53,8 +53,10 @@ namespace template
             return Vector3.Zero;
         }
 
-        public Vector3 GetStaticColor(Scene s)
+        public Vector3 GetStaticColor(Scene s, int depth = 0)
         {
+            if (depth > MAX_DEPTH)
+                return Vector3.Zero;
             foreach (Primitive p in s.Primitives)
             {
                 p.Intersect(this);
@@ -62,7 +64,15 @@ namespace template
             if (intsect.Primitive != null)
             {
                 if (DEBUGSWITCH)
-                    DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s); //Will add shadowrays to the debug
+                {
+                    if (depth == 0)
+                        { 
+                    DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug 
+                    }
+                    reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance-EPS));
+                    reflectionRay.GetStaticColor(s, depth + 1);
+                    Debugger.AddReflectedRay(reflectionRay);
+                }
                 return intsect.Primitive.Color;
             }
             else
@@ -94,7 +104,7 @@ namespace template
 
         bool IsVisible(Vector3 I, Vector3 L, float dist, Scene s)
         {
-            Ray shadowRay = new Ray(L, I + L * EPS);
+            Ray shadowRay = new Ray(L, I);
             foreach(Primitive p in s.Primitives)
             {
                 p.Intersect(shadowRay);
@@ -143,9 +153,14 @@ namespace template
             set { intsect = value; }
         }
 
-        public Vector3 ReflectedRay
+        public Vector3 ReflectedDirection
         {
             get { return direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal; }
+        }
+
+        public Ray ReflectionRay
+        {
+            get { return reflectionRay; }
         }
         #endregion
     }

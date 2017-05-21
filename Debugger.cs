@@ -33,12 +33,12 @@ namespace template
 
         public static void Draw()
         {
-            foreach(Ray r in primaryRays)
+            foreach (Ray r in primaryRays)
                 r.DrawDebug(screen, 0xff0000, false);
             foreach (Ray s in shadowRays)
-                s.DrawDebug(screen, 0x0000ff, true);
+                s.DrawDebug(screen, 0x000077, true);
             foreach (Ray r in reflectedRays)
-                r.DrawDebug(screen, 0x00ff00, false);
+                r.DrawDebug(screen, 0x007700, false);
         }
 
         public static void AddPrimaryRay(Ray r)

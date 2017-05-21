@@ -74,6 +74,7 @@ namespace template
 
         void DrawMSAA(Surface screen, Surface debugScreen)
         {
+            if (MSAA == 64) return;
             Vector3 subScreenPoint;
             Vector3 finalColor = new Vector3(0);
             Ray ray = new Ray(Vector3.UnitX, Vector3.Zero);
@@ -118,7 +119,7 @@ namespace template
                     
                 }
             screen.Line(0, yoffset + yjump, screen.width, yoffset + yjump, 0xff00ff);
-            if (screen.height - yoffset > yjump+1)
+            if (screen.height - yoffset > 64)
                 screen.Print("MSAAx" + MSAA.ToString(), screen.width / 2 - 20, yoffset + yjump + 2, 0xffffff);
 
             if (yoffset < screen.height - yjump)
