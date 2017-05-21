@@ -12,7 +12,7 @@ namespace template
 
         public Application()
         {
-            rayTracer = new RayTracer();
+            
         }
 
         public void Draw(Surface viewScreen, Surface debugScreen)

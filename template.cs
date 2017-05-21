@@ -83,9 +83,9 @@ namespace template
 			SwapBuffers();
 		}
 		public static void Main( string[] args ) 
-		{ 
-			// entry point
-			using (OpenTKApp app = new OpenTKApp()) { app.Run( 30.0, 0.0 ); }
+		{
+            // entry point
+            using (OpenTKApp app = new OpenTKApp()) { app.Run(); }
         }
 	}
 }

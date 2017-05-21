@@ -10,10 +10,11 @@ namespace template
 {
     class Ray
     {
+        public static bool DEBUGSWITCH = false;
         Vector3 direction;
         Vector3 origin;
         Intersection intsect;
-        Ray shadowRay, reflectionRay;
+        Ray reflectionRay;
 
         public Ray(Vector3 direction, Vector3 origin)
         {
@@ -36,7 +37,7 @@ namespace template
                     return intsect.Primitive.Color * DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s);// * Clamp(Vector3.Dot(direction, intsect.Normal));
 
 
-                reflectionRay = new Ray(ReflectedRay, origin + direction * (intsect.Distance + EPS));
+                reflectionRay = new Ray(ReflectedRay, origin + direction * (intsect.Distance - EPS));
                 if (intsect.Primitive.Reflectivity == 1)
                 {
                     return (reflectionRay.GetColor(s, depth + 1));
@@ -51,16 +52,18 @@ namespace template
             return Vector3.Zero;
         }
 
-        public Vector3 GetStaticColor(Scene s, int depth = 0)
+        public Vector3 GetStaticColor(Scene s)
         {
-            if (depth > MAX_DEPTH)
-                return Vector3.Zero;
             foreach (Primitive p in s.Primitives)
             {
                 p.Intersect(this);
             }
             if (intsect.Primitive != null)
+            {
+                if (DEBUGSWITCH)
+                    DirectIllumination(origin + direction * intsect.Distance, intsect.Normal, s); //Will add shadowrays to the debug
                 return intsect.Primitive.Color;
+            }
             else
                 return Vector3.Zero;
         }
@@ -90,7 +93,7 @@ namespace template
 
         bool IsVisible(Vector3 I, Vector3 L, float dist, Scene s)
         {
-            shadowRay = new Ray(L, I + L * EPS);
+            Ray shadowRay = new Ray(L, I + L * EPS);
             foreach(Primitive p in s.Primitives)
             {
                 p.Intersect(shadowRay);
@@ -98,6 +101,11 @@ namespace template
                     return false;
             }
             shadowRay.intsect.Distance = dist;
+
+            if (DEBUGSWITCH == true)
+            {
+                Debugger.AddShadowRay(shadowRay);
+            }
             return true;
         }
 
@@ -113,9 +121,6 @@ namespace template
                 TX(origin.X + direction.X * intsect.Distance, screen),
                 TY(origin.Z + direction.Z * intsect.Distance, screen),
                 color);
-
-            if (shadowRay != null)
-                shadowRay.DrawDebug(screen, 0x0000ff, true);
         }
 
 
@@ -139,7 +144,7 @@ namespace template
 
         public Vector3 ReflectedRay
         {
-            get { return Vector3.Normalize(direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal); }
+            get { return direction - 2 * Vector3.Dot(direction, intsect.Normal) * intsect.Normal; }
         }
         #endregion
     }

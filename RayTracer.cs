@@ -14,26 +14,37 @@ namespace template
         static Camera camera;
         static Random random;
 
+        int msaa;
+        int msaaValue;
+        float axisoffsetX, axisoffsetY;
+        int yoffset;
+        int yjump;
+
+        float u = 0, v = 0;
+        int offset = 0;
+
         public RayTracer()
         {
             camera = new Camera(new Vector3(0, 0, -3), new Vector3(0, 0, 1f));
             scene = new Scene();
             random = new Random();
+            MSAA = 1;
+            yoffset = 0;
+            msaaValue = (int)Math.Sqrt(MSAA);
+            axisoffsetX = 1f / (512 * msaaValue);
+            axisoffsetY = 1f / (512 * msaaValue);
 
-
-            // scene.AddLight(new Light(new Vector3(1f, -.9f, -1.2f)) { Intensity = Vector3.One });
-            // scene.AddLight(new Light(new Vector3(0, -0.9f, -1.2f)) { Intensity = Vector3.One });
-            // scene.AddLight(new Light(new Vector3(0, 1, -2.2f)) { Intensity = new Vector3(0, 0, 1) * 1 });
-            scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1, 1, 0.4f) * 1));
             scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
             scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
             scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
             scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
             scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(0, 0, 1)*100));
 
+
             scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
             scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 0.5f, 0.5f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
+
             scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
             scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof" , Color = new Vector3(0, 0, 1)});
             scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
@@ -43,21 +54,94 @@ namespace template
         public void DrawRayTracer(Surface viewScreen, Surface debugScreen)
         {
             viewScreen.Print("RayTracer", 0, 0, 0xffffff);
-            DrawDebug(debugScreen);
             Draw(viewScreen, debugScreen);
-        }
-
-        void DrawDebug(Surface debugScreen)
-        {
-            debugScreen.Print("Debug", 0, 0, 0x000000);
-            debugScreen.Line(0, 0, 0, debugScreen.height, 0xffff00);
-            scene.DrawDebug(debugScreen);
-            camera.DrawDebug(debugScreen);
         }
 
         void Draw(Surface screen, Surface debugScreen)
         {
             camera.Update();
+
+            float vertStep = 1f / screen.height;
+
+
+            if (!camera.IsMoving)
+            {
+                DrawMSAA(screen, debugScreen);
+            }
+            else
+            {
+                yoffset = 0;
+                u = 0;
+                v = 0;
+                offset = 0;
+                MSAA = 1;
+                DrawNoMSAA(screen, debugScreen);
+            }
+        }
+
+        void DrawMSAA(Surface screen, Surface debugScreen)
+        {
+            Vector3 subScreenPoint;
+            Vector3 finalColor = new Vector3(0);
+            Ray ray;
+            Vector3 screenPoint;
+            Vector3 dir;
+            Vector3 screenHorz = camera.TopRight - camera.TopLeft; //Horizontal vector of the screen
+            Vector3 screenVert = camera.BottomLeft - camera.TopLeft; //Vertical vector of the screen
+            float horzStep = 1f / screen.width;
+            float vertStep = 1f / screen.height;
+            float msX = 0;
+            float msY = 0;
+
+            for(int y = yoffset; y<(yoffset + yjump); ++y, u = 0, v+=vertStep, offset += screen.width)
+                for (int x = 0; x < screen.width; ++x, u += horzStep)
+                {
+                    screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
+                    finalColor = new Vector3(0);
+                    msX = 0;
+                    msY = 0;
+                    for (int subY = 0; subY < msaaValue; subY++, msX = 0, msY += axisoffsetY)
+                        for (int subX = 0; subX < msaaValue; subX++, msX += axisoffsetX)
+                        {
+                            subScreenPoint = new Vector3(screenPoint.X + msX, screenPoint.Y + msY, screenPoint.Z);
+                            //subScreenPoint = screenPoint;
+                            dir = subScreenPoint - camera.Position;  //A vector from the camera to that screen point
+                            ray = new Ray(dir.Normalized(), camera.Position);  //Create a primary ray from there
+
+                            //foreach (Primitive p in scene.Primitives)
+                            //   p.Intersect(ray);  //Calculate the intersection with all the primitives
+
+                            //byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
+                        
+                            finalColor += ray.GetColor(scene);
+                            //Console.WriteLine("InLoop: " +subScreenPoint + " : " + subColor + " : " + finalColor);
+
+                            //Draw some rays on the debug screen
+
+                        }
+
+                    finalColor = finalColor / MSAA;
+                    //Console.WriteLine("OutLoop: " + finalColor);    
+                    screen.pixels[x + offset] = CreateColor(finalColor);
+                }
+
+            if (yoffset < screen.height - yjump)
+            {
+                yoffset += yjump;
+            }
+            else
+            {
+                yoffset = 0;
+                u = 0;
+                v = 0;
+                offset = 0;
+                if (MSAA < 64)
+                    MSAA = MSAA * 4;
+            }
+        }
+
+        void DrawNoMSAA(Surface screen, Surface debugScreen)
+        {
             Ray ray;
             Vector3 screenPoint;
             Vector3 screenHorz = camera.TopRight - camera.TopLeft; //Horizontal vector of the screen
@@ -67,6 +151,7 @@ namespace template
             float u = 0, v = 0;
             int offset = 0;
             for (int y = 0; y < screen.height; ++y, u = 0, v += vertStep, offset += screen.width)
+            {
                 for (int x = 0; x < screen.width; ++x, u += horzStep)
                 {
                     screenPoint = camera.TopLeft + u * screenHorz + v * screenVert; //Top left + u * horz + v * vert => screen point
@@ -81,31 +166,21 @@ namespace template
                         screen.pixels[x + offset] = CreateColor(Clamp(ray.GetColor(scene)));
                     else
                     {
-                        if (random.Next(15) == 0)
+                        if (random.Next(10) == 0 || y == screen.height >> 1)
                             screen.pixels[x + offset] = CreateColor(Clamp(ray.GetStaticColor(scene) * Clamp(Vector3.Dot(ray.Direction, -ray.Intsect.Normal))));
                     }
 
+
+                    Ray.DEBUGSWITCH = false;
                     //Draw some rays on the debug screen
-                    if (y == (debugScreen.height >> 1) && x % 32 == 0)
+                    if (y == screen.height >> 1 && x % 32 == 0)
                     {
-                        /*
-                            debugScreen.Line(
-                            TX(camera.Position.X, debugScreen),
-                            TY(camera.Position.Z, debugScreen),
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
-                            0xff0000);
-
-                        debugScreen.Line(
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z, debugScreen),
-                            TX(camera.Position.X + ray.Intsect.Distance * ray.Direction.X + ray.Intsect.Normal.X, debugScreen),
-                            TY(camera.Position.Z + ray.Intsect.Distance * ray.Direction.Z + ray.Intsect.Normal.Z, debugScreen),
-                            0x00ff00); */
-
-                        ray.DrawDebug(debugScreen, 0xff0000);
+                        Ray.DEBUGSWITCH = true;
+                        Debugger.AddPrimaryRay(ray);
                     }
                 }
+            }
+            Debugger.SwapBuffers();
         }
 
         #region Properties
@@ -117,6 +192,12 @@ namespace template
         public static Camera Camera
         {
             get { return camera; }
+        }
+
+        public int MSAA
+        {
+            get { return msaa; }
+            set { msaa = value; msaaValue = (int)Math.Sqrt(msaa); yjump = 64 / msaa; }
         }
         #endregion
     }
