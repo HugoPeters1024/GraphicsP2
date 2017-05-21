@@ -9,24 +9,28 @@ namespace template
     class SpotLight : Light
     {
         Vector3 direction;
-        float radius;
+        float radiusCalc;
+        float radiusScalar = 1f;
 
-        public SpotLight(Vector3 position, Vector3 direction, float radius) : base(position)
+        public SpotLight(Vector3 position, Vector3 target) : base(position)
         {
+            this.direction = target - position;
             this.direction = Vector3.Normalize(direction);
-            this.radius = radius;
+            radiusCalc = radiusScalar * (float)Math.Cos(60);
         }
 
-        public SpotLight(Vector3 position, Vector3 intensity, Vector3 direction, float radius) : base(position, intensity)
+        public SpotLight(Vector3 position, Vector3 intensity, Vector3 target) : base(position, intensity)
         {
+            this.direction = target - position;
             this.direction = Vector3.Normalize(direction);
-            this.radius = radius;
+            radiusCalc = radiusScalar * (float)Math.Cos(60);
         }
 
-        public SpotLight(Vector3 position, float intensity, Vector3 direction, float radius) : base(position, intensity)
+        public SpotLight(Vector3 position, float intensity, Vector3 target) : base(position, intensity)
         {
+            this.direction = target - position;
             this.direction = Vector3.Normalize(direction);
-            this.radius = radius;
+            radiusCalc = radiusScalar * (float)Math.Cos(60);
         }
 
         public override void DrawDebug(Surface screen)
@@ -35,30 +39,22 @@ namespace template
             base.DrawDebug(screen);
         }
 
+        public float GetRadius(float dist)
+        {
+            return dist * radiusCalc;
+        }
+
         #region Properties
         public Vector3 Direction
         {
             get { return direction; }
             set { direction = value; }
         }
-
-        public float Radius
+        
+        public float RadiusScalar
         {
-            get { return radius; }
-            set { radius = value; }
-        }
-
-        public override Vector3 Intensity
-        {
-            get
-            {
-                return base.Intensity;
-            }
-
-            set
-            {
-                base.Intensity = value;
-            }
+            get { return radiusScalar;}
+            set { radiusScalar = value; }
         }
         #endregion
     }

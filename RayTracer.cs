@@ -37,10 +37,12 @@ namespace template
             //scene.AddLight(new Light(new Vector3(0, 2f, 0), new Vector3(1,1,0.4f)*100));
             //scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
             //scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 1, 0)*10));
-            scene.AddLight(new SpotLight(camera.Position, new Vector3(0,0,5), 5f));
+            scene.AddLight(new SpotLight(new Vector3(3f, 0, camera.Position.Z), new Vector3(0, 0, 50)));
+            scene.AddLight(new SpotLight(new Vector3(-3f, 0, camera.Position.Z), new Vector3(0, 0, 50)));
 
-            scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.5f});
-            scene.AddPrimitive(new Sphere(new Vector3(-1.5f, 1.2f, 1f), 0.7f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere", Reflectivity = 0.01f});
+
+            //scene.AddPrimitive(new Sphere(new Vector3(0, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "White Sphere", Reflectivity = 0.5f});
+            //scene.AddPrimitive(new Sphere(new Vector3(-1.5f, 1.2f, 1f), 0.7f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere", Reflectivity = 0.01f});
             scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f});
             scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof" , Color = new Vector3(0, 0, 1)});
             scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });

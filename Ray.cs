@@ -80,23 +80,17 @@ namespace template
                         c.Normalize();
                         if (IsVisible(I, c, dist, s))
                         {
-                            if (dist > spot.Radius)
+                            if (dist > spot.GetRadius(t))
                                 return color;
                             else
                             {
-                                Vector3 L = spot.Origin - I;
-                                float NdotL = Vector3.Dot(N, L);
-                                if (NdotL > 0)
+                                Vector3 intensity = spot.Intensity;// * (dist / spot.GetRadius(t));
+                                    float dist3 = (float)Math.Sqrt(c2);
+                                if (IsVisible(I, c, dist3, s))
                                 {
-                                    float L2 = Vector3.Dot(L, L);
-                                    float dist3 = (float)Math.Sqrt(L2);
-                                    L.Normalize();
-                                    if (IsVisible(I, L, dist3, s))
-                                    {
-                                        float attenuation = (1f / (L2)) - EPS;
-                                        if (attenuation > 0)
-                                            color = Clamp(color + spot.Intensity * NdotL * attenuation);
-                                    }
+                                    float attenuation = (1f / (c2)) - EPS;
+                                    if (attenuation > 0)
+                                        color = Clamp(color + intensity * Ndotc * attenuation);
                                 }
                             }
                         }
