@@ -20,6 +20,7 @@ namespace template
         float axisoffsetX, axisoffsetY;
         int yoffset;
         int yjump;
+        SpotLight camLight;
 
         float u = 0, v = 0;
         int offset = 0;
@@ -33,12 +34,14 @@ namespace template
             yoffset = 0;
             msaaValue = (int)Math.Sqrt(MSAA);
 
-            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
-            scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
-            scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
-            scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
-            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1)*10));
-
+            //scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
+            //scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            //scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            //scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 10));
+            //scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1)*10));
+            //scene.AddLight(new SpotLight(camera.Position, 2f, new Vector3(0, 1f, 2)));
+            camLight = new SpotLight(camera.Position, 5f, Vector3.UnitZ);
+            scene.AddLight(camLight);
 
             scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
             scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 0.5f, 0.5f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
@@ -54,6 +57,8 @@ namespace template
 
         public void Draw(Surface screen, Surface debugScreen)
         {
+            camLight.Origin = camera.Position + new Vector3(0, 1, 0);
+            camLight.Direction = Vector3.Normalize(camera.Position - camera.Center);
             camera.Update();
             if (!camera.IsMoving)
             {
@@ -196,8 +201,8 @@ namespace template
                 msaaValue = (int)Math.Sqrt(msaa);
                 yjump = 64 / msaaValue;
                 msaaFactor = 1f / msaa;
-                axisoffsetX = 1f / (Game.VIEW_WIDTH * msaaValue);
-                axisoffsetY = 1f / (Game.VIEW_HEIGHT * msaaValue);
+                axisoffsetX = 1f / (OpenTKApp.VIEW_WIDTH * msaaValue);
+                axisoffsetY = 1f / (OpenTKApp.VIEW_HEIGHT * msaaValue);
             }
         }
         #endregion

@@ -20,7 +20,7 @@ namespace template
         public static void Update()
         {
             prevKeyboardState = curKeyboardState;
-            curKeyboardState = Keyboard.GetState();         
+            curKeyboardState = Keyboard.GetState();
         }
 
         public static bool KeyPressed(Key k)

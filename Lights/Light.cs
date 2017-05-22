@@ -31,14 +31,13 @@ namespace template
             this.intensity = new Vector3(intensity);
         }
 
-        public void DrawDebug(Surface screen)
+        public virtual void DrawDebug(Surface screen)
         {
             DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.One);
         }
 
-
         #region Properties
-        public Vector3 Intensity
+        public virtual Vector3 Intensity
         {
             get { return intensity; }
             set { intensity = value; }

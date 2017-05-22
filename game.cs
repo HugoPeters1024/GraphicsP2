@@ -5,10 +5,6 @@ namespace template
 {
     class Game
     {
-        public static int VIEW_WIDTH = OpenTKApp.APP_WIDTH / 2;
-        public static int VIEW_HEIGHT = OpenTKApp.APP_HEIGHT;
-        public static int DEBUG_WIDTH = OpenTKApp.APP_WIDTH / 2;
-        public static int DEBUG_HEIGHT = OpenTKApp.APP_HEIGHT;
         public static float SCENE_WIDTH = 10f;
         public static float SCENE_HEIGHT = SCENE_WIDTH;
 
@@ -21,8 +17,8 @@ namespace template
         public void Init()
         {
             //Screen size is defined in the template.cs
-            viewScreen = new Surface(VIEW_WIDTH, VIEW_HEIGHT);
-            debugScreen = new Surface(DEBUG_WIDTH, DEBUG_HEIGHT);
+            viewScreen = new Surface(OpenTKApp.VIEW_WIDTH, OpenTKApp.VIEW_HEIGHT);
+            debugScreen = new Surface(OpenTKApp.DEBUG_WIDTH, OpenTKApp.DEBUG_HEIGHT);
             rayTracer = new RayTracer(screen, debugScreen);
             KeyboardHandler.Init();
             Debugger.DrawDebug();

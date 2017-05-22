@@ -39,7 +39,7 @@ namespace template
 
         public void Update()
         {
-            if (IsAnyKeyDown())
+            if (KeyboardHandler.IsAnyKeyDown())
             {
                 IsMoving = true;
             }
@@ -231,6 +231,11 @@ namespace template
         public Vector3 Position
         {
             get { return position; }
+        }
+
+        public Vector3 Direction
+        {
+            get { return direction; }
         }
 
         public bool IsMoving

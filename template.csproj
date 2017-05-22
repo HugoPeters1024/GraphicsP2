@@ -73,7 +73,7 @@
     <Compile Include="game.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="KeyboardHandler.cs" />
-    <Compile Include="Light.cs" />
+    <Compile Include="Lights\Light.cs" />
     <Compile Include="Primitives\Floor.cs" />
     <Compile Include="Primitives\Plane.cs" />
     <Compile Include="Primitives\Primitive.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Ray.cs" />
     <Compile Include="RayTracer.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="Lights\SpotLight.cs" />
     <Compile Include="surface.cs" />
     <Compile Include="template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
