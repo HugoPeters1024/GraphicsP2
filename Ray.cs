@@ -86,13 +86,13 @@ namespace template
                     Vector3 L = spot.Origin - I;
                     float NdotL = Vector3.Dot(N, L);
                     
-                    if (NdotL > 0)
+                    // if (NdotL > 0)
                     {
                         float L2 = Vector3.Dot(L, L);
                         float t = Vector3.Dot(L, spot.Direction);
                         Vector3 distVec = L - (t * spot.Direction);
                         float dist2 = Vector3.Dot(distVec, distVec);
-                        float dist = (float)Math.Sqrt(dist2);
+                        float dist = (float)Math.Sqrt(L2);
                         L.Normalize();
                         if (IsVisible(I, L, (float)Math.Sqrt(L2), s))
                         {
@@ -101,9 +101,9 @@ namespace template
                             else
                             {
                                 //Vector3 intensity = spot.Intensity * (Clamp(NdotL / dist2));
-                                Vector3 intensity = spot.Intensity * (1-(dist / spot.GetRadius(t)));
-                                float dist3 = (float)Math.Sqrt(L2);
-                                if (IsVisible(I, L, dist3, s))
+                                float dist3 = (float)Math.Sqrt(Vector3.Dot(distVec, distVec));
+                                Vector3 intensity = spot.Intensity * (1-(dist3 / spot.GetRadius(t)));
+                                //if (IsVisible(I, L, dist3, s))
                                 {
                                     float attenuation = (1f / (L2)) - EPS;
                                     if (attenuation > 0)

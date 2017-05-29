@@ -58,7 +58,7 @@ namespace template
         public void Draw(Surface screen, Surface debugScreen)
         {
             camLight.Origin = camera.Position + new Vector3(0, 1, 0);
-            camLight.Direction = Vector3.Normalize(camera.Position - camera.Center);
+            //camLight.Direction = Vector3.Normalize(camera.Position - camera.Center);
             camera.Update();
             if (!camera.IsMoving)
             {
