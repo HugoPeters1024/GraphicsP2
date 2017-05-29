@@ -11,9 +11,11 @@ namespace template
         static Ray[] primaryRays;
         static Ray[] shadowRays;
         static Ray[] reflectedRays;
+        static Ray[] normals;
         static List<Ray> primaryRaysBuffer;
         static List<Ray> shadowRaysBuffer;
         static List<Ray> reflectedRaysBuffer;
+        static List<Ray> normalsBuffer;
         static Surface screen;
         static Scene scene;
         static Camera camera;
@@ -23,9 +25,11 @@ namespace template
             primaryRays = new Ray[0];
             shadowRays = new Ray[0];
             reflectedRays = new Ray[0];
+            normals = new Ray[0];
             primaryRaysBuffer = new List<Ray>();
             shadowRaysBuffer = new List<Ray>();
             reflectedRaysBuffer = new List<Ray>();
+            normalsBuffer = new List<Ray>();
             screen = _screen;
             scene = _scene;
             camera = _camera;
@@ -39,6 +43,8 @@ namespace template
                 s.DrawDebug(screen, 0x000077, true);
             foreach (Ray r in reflectedRays)
                 r.DrawDebug(screen, 0x007700, false);
+            foreach (Ray n in normals)
+                n.DrawDebug(screen, 0xffffff); 
         }
 
         public static void AddPrimaryRay(Ray r)
@@ -56,6 +62,11 @@ namespace template
             reflectedRaysBuffer.Add(r);
         }
 
+        public static void AddNormal(Ray n)
+        {
+            normalsBuffer.Add(n);
+        }
+
         public static void SwapBuffers()
         {
             primaryRays = new Ray[primaryRaysBuffer.Count];
@@ -64,9 +75,12 @@ namespace template
             shadowRaysBuffer.CopyTo(shadowRays);
             reflectedRays = new Ray[reflectedRaysBuffer.Count];
             reflectedRaysBuffer.CopyTo(reflectedRays);
+            normals = new Ray[normalsBuffer.Count];
+            normalsBuffer.CopyTo(normals);
             primaryRaysBuffer.Clear();
             shadowRaysBuffer.Clear();
             reflectedRaysBuffer.Clear();
+            normalsBuffer.Clear();
             screen.Clear(0);
             DrawDebug();
         }

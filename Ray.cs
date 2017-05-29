@@ -62,12 +62,15 @@ namespace template
                 if (DEBUGSWITCH)
                 {
                     if (depth == 0)
-                        { 
+                    { 
                     DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug 
+                        Ray reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS));
+                        reflectionRay.GetStaticColor(s, depth + 1);
+                        Debugger.AddReflectedRay(reflectionRay);
+                        Ray n = new Ray(intsect.Normal, origin + direction * intsect.Distance);
+                        n.intsect.Distance = 1f;
+                        Debugger.AddNormal(n);
                     }
-                    Ray reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance-EPS));
-                    reflectionRay.GetStaticColor(s, depth + 1);
-                    Debugger.AddReflectedRay(reflectionRay);
                 }
                 return intsect.Primitive.Color;
             }
@@ -169,6 +172,7 @@ namespace template
 
 
         #region Properties
+
         public Vector3 Origin
         {
             get{ return origin; }
