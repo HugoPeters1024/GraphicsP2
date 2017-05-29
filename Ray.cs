@@ -63,13 +63,13 @@ namespace template
                 {
                     if (depth == 0)
                     { 
-                    DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug 
-                        Ray reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS));
-                        reflectionRay.GetStaticColor(s, depth + 1);
-                        Debugger.AddReflectedRay(reflectionRay);
-                        Ray n = new Ray(intsect.Normal, origin + direction * intsect.Distance);
-                        n.intsect.Distance = 1f;
-                        Debugger.AddNormal(n);
+                        DirectIllumination(origin + direction * (intsect.Distance-EPS), intsect.Normal, s); //Will add shadowrays to the debug buffer
+                        Ray reflectionRay = new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS)); // generate a reflection ray
+                        reflectionRay.GetStaticColor(s, depth + 1); //get a length
+                        Debugger.AddReflectedRay(reflectionRay); //add it to the buffer
+                        Ray n = new Ray(intsect.Normal, origin + direction * intsect.Distance); //generate a normal
+                        n.intsect.Distance = 1f; //make it lenght 1
+                        Debugger.AddNormal(n); // add it to the buffer
                     }
                 }
                 return intsect.Primitive.Color;
@@ -86,10 +86,10 @@ namespace template
                 if (light is SpotLight)
                 {
                     SpotLight spot = light as SpotLight;
-                    Vector3 L = spot.Origin - I;
+                    Vector3 L = spot.Origin - I;  //From the intersection to the spotlight
                     float NdotL = Vector3.Dot(N, L);
                     
-                    // if (NdotL > 0)
+                    if (NdotL > 0)
                     {
                         float L2 = Vector3.Dot(L, L);
                         float t = Vector3.Dot(L, spot.Direction);
