@@ -48,9 +48,9 @@ namespace template
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
 
             scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f });
-            scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
-            scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
-            scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
+            //scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
+            //scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
+            //scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
 
             Debugger.Init(debugScreen, scene, camera);
             FirstFrame = true;

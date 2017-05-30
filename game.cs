@@ -13,6 +13,10 @@ namespace template
         Surface debugScreen;
         Surface viewScreen;
         RayTracer rayTracer;
+
+        Surface skydome;
+        static int[,] skydomeArray;
+
         // initialize
         public void Init()
         {
@@ -20,6 +24,15 @@ namespace template
             viewScreen = new Surface(OpenTKApp.VIEW_WIDTH, OpenTKApp.VIEW_HEIGHT);
             debugScreen = new Surface(OpenTKApp.DEBUG_WIDTH, OpenTKApp.DEBUG_HEIGHT);
             rayTracer = new RayTracer(screen, debugScreen);
+            
+            /*
+            skydome = new Surface("../../assets/skydome0.png");
+            skydomeArray = new int[skydome.width, skydome.height];
+            for (int y = 0; y < skydome.height; ++y)
+                for (int x = 0; x < skydome.width; ++x)
+                    skydomeArray[x, y] = (skydome.pixels[x + skydome.height * y]);
+            */
+            
             KeyboardHandler.Init();
             Debugger.DrawDebug();
         }
@@ -42,6 +55,13 @@ namespace template
                 for(int x=0; x<s.height; ++x)
                     screen.pixels[xs + x + offset] = s.pixels[x + s.width * y];
         }
+
+        #region Properties
+        public static int[,] SkydomeArray
+        {
+            get { return skydomeArray; }
+        }
+        #endregion
     }
 
 }// namespace Template

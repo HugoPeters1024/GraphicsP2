@@ -47,7 +47,15 @@ namespace template
                         (new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS)).GetColor(s, depth + 1));
             }
             return Vector3.Zero;
-        }
+            
+            float r = (float)((1 / Math.PI) * Math.Acos(direction.Z) / Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y));
+            /*
+            return new Vector3(
+                ((Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) >> 16) & 255, 
+                ((Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) >> 8) & 255, 
+                (Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) & 255); 
+            */    
+    }
 
         public Vector3 GetStaticColor(Scene s, int depth = 0)
         {

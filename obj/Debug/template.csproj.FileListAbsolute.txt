@@ -18,7 +18,6 @@ S:\GraphicsP22\obj\Debug\template.pdb
 S:\GraphicsP22\bin\Debug\template.exe
 S:\GraphicsP22\bin\Debug\template.pdb
 S:\GraphicsP22\bin\Debug\OpenTK.dll
-S:\GraphicsP22\obj\Debug\template.csprojResolveAssemblyReference.cache
 C:\Users\Hugo\Google Drive\Graphics\P2\bin\Debug\template.exe.config
 C:\Users\Hugo\Google Drive\Graphics\P2\obj\Debug\template.exe
 C:\Users\Hugo\Google Drive\Graphics\P2\obj\Debug\template.pdb
