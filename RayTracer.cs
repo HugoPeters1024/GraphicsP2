@@ -34,25 +34,20 @@ namespace template
             yoffset = 0;
             msaaValue = (int)Math.Sqrt(MSAA);
 
-            //scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
-            //scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            //scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            //scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            //scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1) * 1));
-            //scene.AddLight(new SpotLight(camera.Position, 2f, new Vector3(0, 1f, 2)));
-            //camLight = new SpotLight(camera.Position, 5f, Vector3.UnitZ) { Intensity = new Vector3(0, 1, 0) };
-            //scene.AddLight(camlight);
-
-            scene.AddLight(new SpotLight(new Vector3(2, 1, camera.Position.Z), 1f, new Vector3(-1.1f, 0, 0)));
+            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
+            scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 1f, 1) * 1));
+            scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 1f, 1) * 1));
+            scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 1f, 1) * 1));
+            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1) * 1));          
 
             scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
-            scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 1f, 1f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
-            //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
+            scene.AddPrimitive(new Sphere(new Vector3(-2.1f, 0, -0.5f), 1f, new Vector3(0.9f, 0.9f, 0.9f)) { PrimitiveName = "White Sphere", Reflectivity = 0.01f });
+            scene.AddPrimitive(new Sphere(new Vector3(-0.7f, 0, 3f), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere", Reflectivity = 0f });
 
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0f });
-            scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
-            scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
-            scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f });
+            //scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
+            //scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
+            //scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
 
             Debugger.Init(debugScreen, scene, camera);
             FirstFrame = true;

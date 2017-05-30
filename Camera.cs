@@ -34,7 +34,6 @@ namespace template
         {
             DrawCircle(screen, position.X, position.Z, 0.1f, Vector3.One);
             screen.Line(TX(TopLeft.X,screen), TY(TopLeft.Z,screen), TX(TopRight.X, screen), TY(TopRight.Z, screen), 0xffffff);
-            //screen.Box(TX(TopLeft.X, screen), TY(TopLeft.Z - 0.02f, screen), TX(TopRight.X, screen), TY(TopRight.Z + 0.02f, screen), 0xffffff);
         }
 
         public void Update()

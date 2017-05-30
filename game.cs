@@ -13,13 +13,7 @@ namespace template
         Surface debugScreen;
         Surface viewScreen;
         RayTracer rayTracer;
-        Random r;
-
         static PFM skydome;
-        /*
-        static Surface skydome;
-        static int[,] skydomeArray;
-        */
 
         // initialize
         public void Init()
@@ -28,19 +22,16 @@ namespace template
             viewScreen = new Surface(OpenTKApp.VIEW_WIDTH, OpenTKApp.VIEW_HEIGHT);
             debugScreen = new Surface(OpenTKApp.DEBUG_WIDTH, OpenTKApp.DEBUG_HEIGHT);
             rayTracer = new RayTracer(screen, debugScreen);
-            r = new Random();
-            int f = r.Next(0, 3);
 
             /// 0 = Eucalyptus Grove, UC Berkeley
-            // f = 0;
+            // int f = 0;
 
             /// 1 = The Uffizi Gallery, Florence
-            // f = 1;
+            // int f = 1;
 
-            /// 2 = St. Peter's Basilica, Rome
-            // f = 2;
-
-            //Console.WriteLine(f);
+            /// 2 = St. Peter's Basilica, Rome (This option looks the best with our scene)
+            int f = 2;
+            
             skydome = new PFM("../../assets/" + f + ".pfm");
                        
             KeyboardHandler.Init();
@@ -53,8 +44,9 @@ namespace template
             screen.Clear(0);
             rayTracer.Draw(viewScreen, debugScreen);
 
+            AddSurface(screen.width - viewScreen.width, 0, debugScreen);
+
             AddSurface(0, 0, viewScreen);
-            AddSurface(screen.width - debugScreen.width, 0, debugScreen);
         }
 
         //Company surfaces by an offset and perform a memcopy

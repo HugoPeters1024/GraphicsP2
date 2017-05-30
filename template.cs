@@ -11,8 +11,8 @@ namespace template
 	public class OpenTKApp : GameWindow
 	{
         public static int VIEW_WIDTH = 512;
-        public static int VIEW_HEIGHT = 512;
-        public static int DEBUG_WIDTH = VIEW_HEIGHT;
+        public static int VIEW_HEIGHT = VIEW_WIDTH;
+        public static int DEBUG_WIDTH = VIEW_WIDTH;
         public static int DEBUG_HEIGHT = VIEW_HEIGHT;
         public static int APP_WIDTH = VIEW_WIDTH + DEBUG_WIDTH;
         public static int APP_HEIGHT = VIEW_HEIGHT;
