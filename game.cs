@@ -13,9 +13,13 @@ namespace template
         Surface debugScreen;
         Surface viewScreen;
         RayTracer rayTracer;
+        Random r;
 
-        Surface skydome;
+        static PFM skydome;
+        /*
+        static Surface skydome;
         static int[,] skydomeArray;
+        */
 
         // initialize
         public void Init()
@@ -24,15 +28,21 @@ namespace template
             viewScreen = new Surface(OpenTKApp.VIEW_WIDTH, OpenTKApp.VIEW_HEIGHT);
             debugScreen = new Surface(OpenTKApp.DEBUG_WIDTH, OpenTKApp.DEBUG_HEIGHT);
             rayTracer = new RayTracer(screen, debugScreen);
-            
-            /*
-            skydome = new Surface("../../assets/skydome0.png");
-            skydomeArray = new int[skydome.width, skydome.height];
-            for (int y = 0; y < skydome.height; ++y)
-                for (int x = 0; x < skydome.width; ++x)
-                    skydomeArray[x, y] = (skydome.pixels[x + skydome.height * y]);
-            */
-            
+            r = new Random();
+            int f = r.Next(0, 3);
+
+            /// 0 = Eucalyptus Grove, UC Berkeley
+            // f = 0;
+
+            /// 1 = The Uffizi Gallery, Florence
+            // f = 1;
+
+            /// 2 = St. Peter's Basilica, Rome
+            // f = 2;
+
+            //Console.WriteLine(f);
+            skydome = new PFM("../../assets/" + f + ".pfm");
+                       
             KeyboardHandler.Init();
             Debugger.DrawDebug();
         }
@@ -56,12 +66,24 @@ namespace template
                     screen.pixels[xs + x + offset] = s.pixels[x + s.width * y];
         }
 
+        public static PFM Skydome
+        {
+            get { return skydome; }
+        }
+
+        /*
         #region Properties
         public static int[,] SkydomeArray
         {
             get { return skydomeArray; }
         }
+
+        public static Surface Skydome
+        {
+            get { return skydome; }
+        }
         #endregion
+        */
     }
 
 }// namespace Template

@@ -10,6 +10,7 @@ namespace template
     public static class KeyboardHandler
     {
         static KeyboardState curKeyboardState, prevKeyboardState;
+        public static bool TOGGLE = true;
 
         public static void Init()
         {
@@ -35,6 +36,11 @@ namespace template
 
         public static bool IsAnyKeyDown()
         {
+            if (TOGGLE)
+            {
+                TOGGLE = false;
+                return true;
+            }
             return curKeyboardState.IsKeyDown(Key.Space);
         }
     }

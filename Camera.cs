@@ -42,108 +42,111 @@ namespace template
             if (KeyboardHandler.IsAnyKeyDown())
             {
                 IsMoving = true;
+
+                //Rotation control
+                #region Rotation
+                //rotate left
+                if (KeyDown(Key.Left))
+                {
+                    Vector3 v = Center;
+                    v -= 0.01f * Vector3.Normalize(TopRight - TopLeft);
+                    direction = Vector3.Normalize(v - position);
+                }
+
+                //rotate right
+                if (KeyDown(Key.Right))
+                {
+                    Vector3 v = Center;
+                    v += 0.01f * Vector3.Normalize(TopRight - TopLeft);
+                    direction = Vector3.Normalize(v - position);
+                }
+
+                //rotate up
+                if (KeyDown(Key.Up) && direction.Y < 0.9f)
+                {
+                    Vector3 v = Center;
+                    v -= 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
+                    direction = Vector3.Normalize(v - position);
+                }
+
+                //rotate down
+                if (KeyDown(Key.Down) && direction.Y > -0.9f)
+                {
+                    Vector3 v = Center;
+                    v += 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
+                    direction = Vector3.Normalize(v - position);
+                }
+                #endregion
+
+                //Movement control
+                #region Movement
+                //move forwards
+                if (KeyDown(Key.W))
+                {
+                    position.X += 0.05f * direction.X;
+                    position.Z += 0.05f * direction.Z;
+                }
+
+                //move backwards
+                if (KeyDown(Key.S))
+                {
+                    position.X -= 0.05f * direction.X;
+                    position.Z -= 0.05f * direction.Z;
+                }
+
+                //move rightwards
+                if (KeyDown(Key.D))
+                {
+                    position.X += 0.05f * direction.Z;
+                    position.Z -= 0.05f * direction.X;
+                }
+
+                //move leftwards
+                if (KeyDown(Key.A))
+                {
+                    position.X -= 0.05f * direction.Z;
+                    position.Z += 0.05f * direction.X;
+                }
+
+                //move up
+                if (KeyDown(Key.LShift))
+                {
+                    position.Y += 0.05f;
+                }
+
+                //move down
+                if (KeyDown(Key.LControl))
+                {
+                    position.Y -= 0.05f;
+                }
+                #endregion
+
+                //Manual FOV control
+                #region Manual FOV
+                if (KeyDown(Key.I))
+                {
+                    //decrease FOV
+                    FOVd -= 5;
+                    FOVr = FOVd * FOVcalc;
+                    distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+                }
+
+                if (KeyDown(Key.K))
+                {
+                    //increase FOV
+                    FOVd += 5;
+                    FOVr = FOVd * FOVcalc;
+                    distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+                }
+                #endregion
             }
             else
             {
                 IsMoving = false;
             }
 
-            //Rotation control
-            #region Rotation
-            //rotate left
-            if (KeyDown(Key.Left))
-            {
-                Vector3 v = Center;
-                v -= 0.01f * Vector3.Normalize(TopRight - TopLeft);
-                direction = Vector3.Normalize(v - position);
-            }
-
-            //rotate right
-            if (KeyDown(Key.Right))
-            {
-                Vector3 v = Center;
-                v += 0.01f * Vector3.Normalize(TopRight - TopLeft);
-                direction = Vector3.Normalize(v - position);
-            }
-
-            //rotate up
-            if (KeyDown(Key.Up) && direction.Y < 0.9f)
-            {
-                Vector3 v = Center;
-                v -= 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
-                direction = Vector3.Normalize(v - position);
-            }
-
-            //rotate down
-            if (KeyDown(Key.Down) && direction.Y > -0.9f)
-            {
-                Vector3 v = Center;
-                v += 0.01f * Vector3.Normalize(BottomLeft - TopLeft);
-                direction = Vector3.Normalize(v - position);
-            }
-            #endregion
-
-            //Movement control
-            #region Movement
-            //move forwards
-            if (KeyDown(Key.W))
-            {
-                position.X += 0.05f * direction.X;
-                position.Z += 0.05f * direction.Z;
-            }
-
-            //move backwards
-            if (KeyDown(Key.S))
-            {
-                position.X -= 0.05f * direction.X;
-                position.Z -= 0.05f *direction.Z;
-            }
-
-            //move rightwards
-            if (KeyDown(Key.D))
-            {
-                position.X += 0.05f * direction.Z;
-                position.Z -= 0.05f * direction.X;
-            }
-
-            //move leftwards
-            if (KeyDown(Key.A))
-            {
-                position.X -= 0.05f * direction.Z;
-                position.Z += 0.05f * direction.X;
-            }
-
-            //move up
-            if (KeyDown(Key.LShift))
-            {
-                position.Y += 0.05f;
-            }
-
-            //move down
-            if (KeyDown(Key.LControl))
-            {
-                position.Y -= 0.05f;
-            }
-            #endregion
-
             //Other controls
             #region Others
-            if (KeyDown(Key.I))
-            {
-                //decrease FOV
-                FOVd -= 5;
-                FOVr = FOVd * FOVcalc;
-                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
-            }
-
-            if (KeyDown(Key.K))
-            {
-                //increase FOV
-                FOVd += 5;
-                FOVr = FOVd * FOVcalc;
-                distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
-            }
-
             if (KeyDown(Key.L))
             {
                 Console.WriteLine("Type desired FOV in degrees:");
@@ -153,6 +156,7 @@ namespace template
                     FOVd = double.Parse(s);
                     FOVr = FOVd * FOVcalc;
                     distance = (float)((width / 2.0) / Math.Tan(FOVr / 2.0));
+                    TOGGLE = true;
                     Console.WriteLine("FOV successfully set to: " + FOVd + " degrees");
                 }
                 catch(Exception e)
@@ -178,12 +182,14 @@ namespace template
                     if (i < 0 || i > RayTracer.Scene.Primitives.Count - 1)
                     {
                         Console.WriteLine("Error, input value not in range of list. Reset to default '0'");
+                        TOGGLE = true;
                         direction = Vector3.Normalize(RayTracer.Scene.Primitives[0].Position - position);
                     }
                     else
                     {
                         Console.Write("Succes, target set to: ");
                         Console.WriteLine(RayTracer.Scene.Primitives[i].PrimitiveName);
+                        TOGGLE = true;
                         direction = Vector3.Normalize(RayTracer.Scene.Primitives[i].Position - position);
                     }
                 }

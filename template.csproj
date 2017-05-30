@@ -74,6 +74,7 @@
     <Compile Include="Intersection.cs" />
     <Compile Include="KeyboardHandler.cs" />
     <Compile Include="Lights\Light.cs" />
+    <Compile Include="PFM.cs" />
     <Compile Include="Primitives\Floor.cs" />
     <Compile Include="Primitives\Plane.cs" />
     <Compile Include="Primitives\Primitive.cs" />

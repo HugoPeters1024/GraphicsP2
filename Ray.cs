@@ -46,16 +46,57 @@ namespace template
                         intsect.Primitive.Reflectivity *
                         (new Ray(ReflectedDirection, origin + direction * (intsect.Distance - EPS)).GetColor(s, depth + 1));
             }
-            return Vector3.Zero;
-            
+            //return Vector3.Zero;
+            direction.Y *= -1;
             float r = (float)((1 / Math.PI) * Math.Acos(direction.Z) / Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y));
+
+            float u, v, x, y;
+            if(direction.X == 0 && direction.Y == 0)
+            {
+                x = Game.Skydome.Width / 2;
+                y = Game.Skydome.Height / 2;
+            }
+            
+            else if (direction.X == 0)
+            {
+                x = Game.Skydome.Width / 2;
+                v = direction.Y * r;
+                v += 1;
+                v *= 0.5f;
+                y = v * Game.Skydome.Height;
+            }
+            else if (direction.Y == 0)
+            {
+                y = Game.Skydome.Height / 2;
+                u = direction.X * r;
+                u += 1;
+                u *= 0.5f;
+                x = u * Game.Skydome.Width;
+            }
+            
+            else
+            {
+                u = direction.X * r;
+                v = direction.Y * r;
+                u += 1;
+                u *= 0.5f;
+                v += 1;
+                v *= 0.5f;
+                x = u * Game.Skydome.Width;
+                y = v * Game.Skydome.Height;
+            }
+            Vector3 TEMP = Game.Skydome.GetPixel((int)x, (int)y);
+            //Console.WriteLine(TEMP);
+            return Game.Skydome.GetPixel((int)x, (int)y);
+
             /*
             return new Vector3(
                 ((Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) >> 16) & 255, 
                 ((Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) >> 8) & 255, 
                 (Game.SkydomeArray[(int)(direction.X * r), (int)(direction.Y * r)]) & 255); 
-            */    
-    }
+            //(Game.Skydome.width/2 + Game.Skydome.width / 2 * r), (int)(Game.Skydome.height / 2 + Game.Skydome.height / 2 * r)])
+            */
+        }
 
         public Vector3 GetStaticColor(Scene s, int depth = 0)
         {
@@ -114,7 +155,7 @@ namespace template
                                 //Vector3 intensity = spot.Intensity * (Clamp(NdotL / dist2));
                                 float dist3 = (float)Math.Sqrt(Vector3.Dot(distVec, distVec));
                                 Vector3 intensity = spot.Intensity * (1-(dist3 / spot.GetRadius(t)));
-                                //if (IsVisible(I, L, dist3, s))
+                                if (IsVisible(I, L, dist3, s))
                                 {
                                     float attenuation = (1f / (L2)) - EPS;
                                     if (attenuation > 0)

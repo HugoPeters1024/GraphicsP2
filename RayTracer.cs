@@ -34,23 +34,25 @@ namespace template
             yoffset = 0;
             msaaValue = (int)Math.Sqrt(MSAA);
 
-            scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
-            // scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            // scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
-            scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1) * 1));
-            scene.AddLight(new SpotLight(camera.Position, 2f, new Vector3(0, 1f, 2)));
+            //scene.AddLight(new Light(new Vector3(-2, -0.5f, 0), 20) { Intensity = new Vector3(0, 1, 0) });
+            //scene.AddLight(new Light(new Vector3(0, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
+            //scene.AddLight(new Light(new Vector3(-2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
+            //scene.AddLight(new Light(new Vector3(2, 1f, -2f), new Vector3(1, 0.5f, 1) * 1));
+            //scene.AddLight(new Light(new Vector3(0, 2, 1), new Vector3(1, 1, 1) * 1));
+            //scene.AddLight(new SpotLight(camera.Position, 2f, new Vector3(0, 1f, 2)));
             //camLight = new SpotLight(camera.Position, 5f, Vector3.UnitZ) { Intensity = new Vector3(0, 1, 0) };
-            // scene.AddLight(camLight);
+            //scene.AddLight(camlight);
+
+            scene.AddLight(new SpotLight(new Vector3(2, 1, camera.Position.Z), 1f, new Vector3(-1.1f, 0, 0)));
 
             scene.AddPrimitive(new Sphere(new Vector3(1.1f, 0, 0), 1f, new Vector3(1f)) { PrimitiveName = "Reflective Sphere", Reflectivity = 1f });
-            scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 0.5f, 0.5f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
+            scene.AddPrimitive(new Sphere(new Vector3(-1.1f, 0, 0), 1f, new Vector3(1f, 1f, 1f)) { PrimitiveName = "White Sphere", Reflectivity = 0f });
             //scene.AddPrimitive(new Sphere(new Vector3(-1, 0, 0), 1f, new Vector3(0, 0, 1f)) { PrimitiveName = "Blue Sphere"});
 
-            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0.5f });
-            //scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
-            //scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
-            //scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
+            scene.AddPrimitive(new Floor(new Vector3(0, 1, 0), -1f) { PrimitiveName = "Floor", Reflectivity = 0f });
+            scene.AddPrimitive(new Plane(new Vector3(0, -1, 0), -5f) { PrimitiveName = "Roof", Color = new Vector3(0, 0, 1) });
+            scene.AddPrimitive(new Plane(new Vector3(0, 0, -1), -5f) { Color = new Vector3(1, 0, 0) });
+            scene.AddPrimitive(new Plane(new Vector3(0, 0, 1), -5) { Color = new Vector3(0, 1, 1) });
 
             Debugger.Init(debugScreen, scene, camera);
             FirstFrame = true;
@@ -84,7 +86,7 @@ namespace template
 
         void DrawMSAA(Surface screen, Surface debugScreen)
         {
-            if (MSAA > 64) return;
+            if (MSAA > 16) return;
             Vector3 subScreenPoint;
             Vector3 finalColor = new Vector3(0);
             Ray ray = new Ray(Vector3.UnitX, Vector3.Zero);
@@ -118,7 +120,7 @@ namespace template
 
                             //byte i = (byte)(1024 / (ray.Intsect.Distance * ray.Intsect.Distance));
                         
-                            finalColor += ray.GetColor(scene);
+                            finalColor += Clamp(ray.GetColor(scene));
                             //Console.WriteLine("InLoop: " +subScreenPoint + " : " + subColor + " : " + finalColor);
 
                             //Draw some rays on the debug screen

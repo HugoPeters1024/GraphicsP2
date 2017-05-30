@@ -21,9 +21,12 @@ namespace template
             color = Vector3.Zero;
             if ((Math.Floor(coord.X * 4) + Math.Floor(coord.Z * 4)) % 2 == 0)
                 color = Vector3.One;
-            
+
             if (t > 0 && t < ray.Intsect.Distance)
-                ray.Intsect = new Intersection(this, t, normal);
+                if (coord.X < -5f || coord.X > 5f || coord.Z < -5f || coord.Z > 5f)
+                    return;
+                else
+                    ray.Intsect = new Intersection(this, t, normal);
         }
     }
 }
